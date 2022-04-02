@@ -1,42 +1,70 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 
-const AddTransaction = ()=>{
-    const initialState = {id:null,amount:0,accountId:"",categoryId:"",notes:"",desc:""}
-    const [accounts,setAccounts] = useState([{id:0,name:"CASH"},{id:1,name:"ONLINE"}])
-    const [categories,setCategories] = useState([{id:0,name:"Food"},{id:1,name:"Bills"},{id:2,name:"Transport"}])
-    const [tansaction,setTransaction] = useState(initialState);
-    
+const AddTransaction = ({accounts,categories,transactionList,setTransactionList})=>{
+    const initialState = {id:Date.now(),date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    const [transaction,setTransaction] = useState(initialState)
+
+    useEffect(()=>{
+        setTransaction(initialState)
+    },[])
+
+    const handleChange = (e)=>{
+        let name = e.target.name
+        let value=  e.target.value
+        if(name=="account"){
+            name = "accountId"
+            value = parseInt(value)
+        }
+
+        if(name=="category"){
+            name = "categoryId"
+            value = parseInt(value)
+        }
+        console.log(transaction)
+        setTransaction({...transaction,[name]:value})
+        
+        
+    }
+
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+        // setTransaction({...transaction,id:Date.now()})
+        setTransactionList([...transactionList,transaction])
+       
+        setTransaction(initialState)
+    }
 
     return(
         <div>
-            <form>
+            <h2>Add Transaction</h2>
+            <form onSubmit={handleSubmit}>
             <label>
                     Date
             </label>
                 
-            <input type="date" name="date" />
+            <input type="date" name="date"  value={transaction.date} onChange={handleChange}/>
             <label>Account : </label>
-            <select name="account"  value={tansaction.accountId}>
-                {accounts.map((account)=>( <option key={account.id} value={account.id}>{account.name}</option>))}
+            <select name="account"  value={transaction.accountId} onChange={handleChange} >
+                {accounts.map((item)=>( <option key={item.id} value={item.id}>{item.name}</option>))}
                
             </select>
             <label>Category : </label>
-            <select name="account" >
-                {categories.map((category)=>(  <option key={category.id} value={category.id}>{category.name}</option> ))}
+            <select name="category" value={transaction.categoryId}  onChange={handleChange} >
+                {categories.map((item)=>(  <option key={item.id} value={item.id}>{item.name}</option> ))}
                
             </select>
             <label>
             Amount
             </label>
-            <input type="number" name="Amount" id="" />
+            <input type="number" name="amount" onChange={handleChange} />
                 
             
             <label>Notes</label>
-            <input type="text" name="notes"  />
+            <input type="text" name="notes"  value={transaction.notes} onChange={handleChange}/>
             <label>Description : </label>
-            <textarea  placeholder='Enter here Something.'/>
+            <textarea  name="desc" onChange={handleChange}  value={transaction.desc} placeholder='Enter here Something.'/>
             <button>SAVE</button>
 
             </form>

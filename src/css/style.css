@@ -78,10 +78,23 @@ body {
   line-height: 1.5;
 }
 
+h2 {
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 600;
+  background-color: antiquewhite;
+  padding: 1rem 2rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 form {
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 100%;
   font-size: 1.5rem;
   margin: 0 auto;
 }
@@ -92,6 +105,20 @@ form input, form select, form button, form textarea {
   height: 2rem;
   margin: 0.5rem 0;
   font-size: 1rem;
+}
+
+table {
+  border: 1px solid gray;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 auto;
+}
+table th {
+  font-weight: 600;
+}
+table th, table td {
+  padding: 0.5rem;
+  border: 1px solid gray;
 }
 
 /*# sourceMappingURL=style.css.map */
