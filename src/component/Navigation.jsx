@@ -12,6 +12,7 @@ const Navigation = (props)=>{
             <ul>
                 <li> <Link to="/" state={{updateMode:false}} onClick={handleClick}>Add</Link></li>
                 <li> <Link to="/show" >Show</Link></li>
+                <li> <Link to="/categories" >Categories</Link></li>
                 
             </ul>
         </nav>

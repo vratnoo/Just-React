@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import  AddTransaction from "./AddTransaction"
-import EditTransaction from "./EditTransaction"
 import  ShowTransaction from "./ShowTransaction"
 import Navigation from './component/Navigation'
+import Category from "./categories"
 
 import {
-  BrowserRouter,
   Routes,
   Route,
   useNavigate,
@@ -34,6 +33,16 @@ function App() {
     // console.log("working : "+id)
     navigate("/",{state:{updateMode:false}})
   }
+  const deleteCategory = (id)=>{
+      setCategories(categories.filter((item)=>item.id!==id))
+  }
+  const editCategory = (id)=>{
+    
+  }
+
+  const addCategory = (item)=>{
+    setCategories({...categories,item})
+  }
 
   const addTransaction = (transaction)=>{
 
@@ -51,6 +60,7 @@ function App() {
   
   const AddProps = {accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
   const ShowProps = {accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
+  const CategoryProps = {categories,addCategory,deleteCategory,editCategory}
   return (
     <>
 
@@ -59,6 +69,7 @@ function App() {
       <Routes>
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
         <Route path="/show" element={ <ShowTransaction  {...ShowProps} />} />
+        <Route path="/categories" element={ <Category  {...CategoryProps} />} />
     </Routes>
       </div>
       
