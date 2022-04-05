@@ -36,21 +36,21 @@ function App() {
   const deleteCategory = (id)=>{
       setCategories(categories.filter((item)=>item.id!==id))
   }
-  const editCategory = (id)=>{
-    
-  }
+ 
 
   const addCategory = (item)=>{
-    setCategories({...categories,item})
+    setCategories([...categories,item])
   }
-
+  const updateCategory = (category)=>{
+    setCategories(categories.map((item)=>item.id==category.id?category:item))
+  }
   const addTransaction = (transaction)=>{
 
     setTransactionList([...transactionList,transaction])
 
   }
   const updateTransaction = (transaction)=>{
-    setTransactionList(transactionList.map((item)=>item.id==transaction.id?transaction:item))
+    setTransactionList(transactionList.map((item)=>item.id===transaction.id?transaction:item))
     setIsEdit(false)
     navigate('/show')
   }
@@ -60,7 +60,7 @@ function App() {
   
   const AddProps = {accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
   const ShowProps = {accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
-  const CategoryProps = {categories,addCategory,deleteCategory,editCategory}
+  const CategoryProps = {categories,addCategory,deleteCategory,updateCategory}
   return (
     <>
 

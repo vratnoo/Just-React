@@ -47,13 +47,12 @@ const AddTransaction = ({accounts,categories,setIsEdit,transactionList,setTransa
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
         if(isEdit==true && editId!==""){
-            
             updateTransaction(transaction)    
-            setTransaction(initialState)  
         }else{
-            addTransaction(transaction)
-            setTransaction(initialState)
+            
+            addTransaction({...transaction,id:Date.now()})
         }
+        setTransaction(initialState)
 
         
        
