@@ -1,12 +1,12 @@
 import React from 'react';
 
 
-const ShowTransaction = ({accounts,categories,transactionList,handleDelete})=>{
+const ShowTransaction = ({accounts,categories,transactionList,handleDelete,handleEdit})=>{
 
     
     return(
         <div>
-            <h2>Add Transaction</h2>
+            <h2>View Transaction</h2>
             <table>
                 <thead>
                     <tr>
@@ -33,7 +33,7 @@ const ShowTransaction = ({accounts,categories,transactionList,handleDelete})=>{
                         <td>{item.notes}</td>
                         <td>{item.desc}</td>
                         <td>{item.date}</td>
-                        <td><button key={item.id} name="edit" id={item.id}>Edit</button></td>
+                        <td><button key={item.id} name="edit" onClick={()=>handleEdit(item.id)}>Edit</button></td>
                         <td><button key={item.id} name="delete" onClick={()=>handleDelete(item.id)}>Delete</button></td>
                         
                     </tr>))}
