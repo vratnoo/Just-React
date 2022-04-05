@@ -12,43 +12,53 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [accounts,setAccounts] = useState([{id:0,name:"CASH"},{id:1,name:"ONLINE"}])
-  const [categories,setCategories] = useState([{id:0,name:"Food"},{id:1,name:"Bills"},{id:2,name:"Transport"}])
-  const [transactionList,setTransactionList] = useState([]);
-  const [editing,setEditing] = useState(false)
-  const [editId,setEditId] = useState("")
-  let navigate = useNavigate();
+    const [accounts,setAccounts] = useState([{id:0,name:"CASH"},{id:1,name:"ONLINE"}])
+    const [categories,setCategories] = useState([{id:0,name:"Food"},{id:1,name:"Bills"},{id:2,name:"Transport"}])
+    const [transactionList,setTransactionList] = useState([]);
+    const [isEdit,setIsEdit] = useState(false)
+    const [editId,setEditId] = useState("")
+    const navigate = useNavigate()
+
   useEffect(()=>{
-    console.log(transactionList)
-    console.log(editId)
-  },[transactionList,editId])
+    console.log("edit mode is: "+isEdit)
+
+  },[isEdit])
   
   const handleDelete = (id)=>{
-
-
     setTransactionList(transactionList.filter((item)=>item.id!==id))
-    
-  } 
+  }
   
   const handleEdit = (id)=>{
-    alert(id)
-    setEditing(true)
+    setIsEdit(true)
     setEditId(id)
-    navigate("/edit",{state:{editId:id}})
+    // console.log("working : "+id)
+    navigate("/",{state:{updateMode:false}})
   }
+
+  const addTransaction = (transaction)=>{
+
+    setTransactionList([...transactionList,transaction])
+
+  }
+  const updateTransaction = (transaction)=>{
+    setTransactionList(transactionList.map((item)=>item.id==transaction.id?transaction:item))
+    setIsEdit(false)
+    navigate('/show')
+  }
+
     
- 
-  const props = {accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit,editing,editing}
+
+  
+  const AddProps = {accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
+  const ShowProps = {accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
   return (
     <>
 
-      <Navigation/>
+      <Navigation setIsEdit={setIsEdit}/>
       <div className='container'>
       <Routes>
-        <Route path='/' element={<AddTransaction {...props} />} />
-        <Route path='/edit' element={<EditTransaction {...props} />} />
-           
-        <Route path="/show" element={ <ShowTransaction  {...props} />} />
+        <Route path="/" element={ <AddTransaction  {...AddProps} />} />
+        <Route path="/show" element={ <ShowTransaction  {...ShowProps} />} />
     </Routes>
       </div>
       

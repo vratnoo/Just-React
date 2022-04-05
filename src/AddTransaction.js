@@ -1,14 +1,29 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 
 
-const AddTransaction = ({accounts,categories,transactionList,setTransactionList})=>{
+const AddTransaction = ({accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
+    
     const initialState = {id:Date.now(),date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
 
     useEffect(()=>{
-        setTransaction(initialState)
-    },[])
+      
+        
+            if(isEdit && editId!==""){
+                const currentTransaction = transactionList.filter((item)=>item.id==editId)
+                // console.log(currentTransaction)
+                setTransaction(currentTransaction[0])
+            }else{
+                
+                setTransaction(initialState)
+                setIsEdit(false)
+            }
+        
+        
+
+    },[isEdit])
 
     const handleChange = (e)=>{
         let name = e.target.name
@@ -31,14 +46,22 @@ const AddTransaction = ({accounts,categories,transactionList,setTransactionList}
     const handleSubmit = (e)=>{
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
-        setTransactionList([...transactionList,transaction])
+        if(isEdit==true && editId!==""){
+            
+            updateTransaction(transaction)    
+            setTransaction(initialState)  
+        }else{
+            addTransaction(transaction)
+            setTransaction(initialState)
+        }
+
+        
        
-        setTransaction(initialState)
     }
 
     return(
         <div>
-            <h2>Add Transaction</h2>
+            {isEdit?(<h2>Edit Transaction</h2>):(<h2>Add Transaction</h2>)}
             <form onSubmit={handleSubmit}>
             <label>
                     Date
@@ -58,7 +81,7 @@ const AddTransaction = ({accounts,categories,transactionList,setTransactionList}
             <label>
             Amount
             </label>
-            <input type="number" name="amount" onChange={handleChange} />
+            <input type="number" name="amount" value={transaction.amount} onChange={handleChange} />
                 
             
             <label>Notes</label>
