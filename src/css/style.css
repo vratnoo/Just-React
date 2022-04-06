@@ -105,6 +105,7 @@ form input, form select, form button, form textarea {
   height: 2rem;
   margin: 0.5rem 0;
   font-size: 1rem;
+  outline: none;
 }
 
 table {
@@ -119,6 +120,34 @@ table th {
 table th, table td {
   padding: 0.5rem;
   border: 1px solid gray;
+}
+
+.income {
+  background-color: #bfcabf;
+  color: green;
+  padding: 0 1rem;
+}
+.income input, .income input[type=date], .income select, .income textarea {
+  background-color: #bfcabf;
+  border: 1px solid green;
+}
+.income .active {
+  background-color: green;
+  color: white;
+}
+
+.expense {
+  background-color: #ffcccc;
+  color: red;
+  padding: 0 1rem;
+}
+.expense input, .expense input[type=date], .expense select, .expense textarea {
+  background-color: #ffcccc;
+  border: 1px solid red;
+}
+.expense .active {
+  background-color: red;
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const ShowTransaction = ({accounts,categories,transactionList,handleDelete,handleEdit})=>{
+const ShowTransaction = ({transactionType,accounts,categories,transactionList,handleDelete,handleEdit})=>{
 
     
     return(
@@ -11,6 +11,7 @@ const ShowTransaction = ({accounts,categories,transactionList,handleDelete,handl
                 <thead>
                     <tr>
                         <th>id</th>
+                        <th>Type</th>
                         <th>Account</th>
                         <th>Amount</th>
                         <th>Category</th>
@@ -23,8 +24,9 @@ const ShowTransaction = ({accounts,categories,transactionList,handleDelete,handl
                 </thead>
                 <tbody>
                     {transactionList.map((item)=>(
-                    <tr>
+                    <tr className={item.type==transactionType.income?"income":"expense"}>
                         <td>{item.id}</td>
+                        <td>{item.type==transactionType.expense?"Expense":"Income"}</td>
                         <td>{accounts.map((account)=>(account.id===item.accountId)?account.name:"")}</td>
                         <td>{item.amount}</td>
                         <td>{categories.map((category)=>(category.id===item.categoryId)?category.name:"")}</td>
@@ -38,8 +40,17 @@ const ShowTransaction = ({accounts,categories,transactionList,handleDelete,handl
                         
                     </tr>))}
                     <tr>
-                        <td colSpan={2}>Total</td>
-                        <td>{transactionList.reduce((total,item)=>total+parseInt(item.amount),0)}</td>
+                        <td colSpan={3}>Total</td>
+                        <td>{transactionList.reduce((total,item)=>{
+                            if(item.type===transactionType.income){
+                                
+                                return total+parseInt(item.amount)
+                            }else{
+                                
+                                return total-parseInt(item.amount)
+                            }
+                            
+                            },0)}</td>
                         <td colSpan={6}></td>
                     </tr>
                      

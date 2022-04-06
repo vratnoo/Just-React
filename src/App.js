@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 function App() {
+    const transactionType = {income:1,expense:2}
     const [accounts,setAccounts] = useState([{id:0,name:"CASH"},{id:1,name:"ONLINE"}])
     const [categories,setCategories] = useState([{id:0,name:"Food"},{id:1,name:"Bills"},{id:2,name:"Transport"}])
     const [transactionList,setTransactionList] = useState([]);
@@ -58,8 +59,8 @@ function App() {
     
 
   
-  const AddProps = {accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
-  const ShowProps = {accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
+  const AddProps = {transactionType,accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
+  const ShowProps = {transactionType,accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
   const CategoryProps = {categories,addCategory,deleteCategory,updateCategory}
   return (
     <>

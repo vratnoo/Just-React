@@ -32,6 +32,7 @@ form{
         height: 2rem;
         margin: 0.5rem 0;
         font-size: 1rem;
+        outline: none;
         // margin-left: 0.5re;
     }
 }
@@ -52,4 +53,37 @@ table{
         padding: 0.5rem;
         border: 1px solid gray;
     }
+}
+
+.income{
+    background-color: rgb(191, 202, 191);
+    color: green;
+    padding:  0 1rem;
+
+    input,input[type="date"],select,textarea{
+        background-color: rgb(191, 202, 191);
+        border: 1px solid green;
+    }
+
+    .active{
+        background-color: green;
+        color: white;
+    }
+}
+
+.expense{
+    background-color: rgb(255, 204, 204);
+    color: red;
+    padding:  0 1rem;
+
+    input,input[type="date"],select,textarea{
+        background-color: rgb(255, 204, 204);
+        border: 1px solid red;
+    }
+
+    .active{
+        background-color: red;
+        color: white;
+    }
+
 }

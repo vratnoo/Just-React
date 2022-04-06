@@ -3,10 +3,12 @@ import { useLocation } from 'react-router-dom'
 
 
 
-const AddTransaction = ({accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
+const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
     
-    const initialState = {id:Date.now(),date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    
+    const initialState = {id:Date.now(),type:transactionType.expense,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
+    const [type,setType] = useState(transactionType.expense)
 
     useEffect(()=>{
       
@@ -47,10 +49,10 @@ const AddTransaction = ({accounts,categories,setIsEdit,transactionList,setTransa
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
         if(isEdit==true && editId!==""){
-            updateTransaction(transaction)    
+            updateTransaction({...transaction,type:type})    
         }else{
             
-            addTransaction({...transaction,id:Date.now()})
+            addTransaction({...transaction,id:Date.now(),type:type})
         }
         setTransaction(initialState)
 
@@ -58,10 +60,23 @@ const AddTransaction = ({accounts,categories,setIsEdit,transactionList,setTransa
        
     }
 
+    const handleClick = (e,item)=>{
+        
+        e.preventDefault()
+        if(type!=item){
+            setType(item)
+        }
+
+    }
+
     return(
-        <div>
+        <div className={(transactionType.income==type)?"income":"expense"}>
             {isEdit?(<h2>Edit Transaction</h2>):(<h2>Add Transaction</h2>)}
             <form onSubmit={handleSubmit}>
+                <fieldset>
+                <button className={(transactionType.income==type)?"active":""} onClick={(e)=>handleClick(e,transactionType.income)}>Income</button>
+                <button className={(transactionType.expense==type)?"active":""} onClick={(e)=>handleClick(e,transactionType.expense)}>Expense</button>
+                </fieldset>
             <label>
                     Date
             </label>

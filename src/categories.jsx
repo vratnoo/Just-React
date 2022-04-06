@@ -13,7 +13,7 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,up
         }else{
             setCategory(initialState)
         }
-    },[currentCategory])
+    },[currentCategory,isEdit])
 
     const handleChange = (e)=>{
         setCategory({...category,name:e.target.value})
@@ -44,7 +44,16 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,up
  
 
 
-const ViewCategory = ({categories,editCategory,deleteCategory,handleEdit}) => {
+const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteCategory,handleEdit}) => {
+    
+    const handleDelete  = (id)=>{
+        deleteCategory(id)
+        if(currentCategory==id){
+            setIsEdit(false)
+        }
+    }
+
+
 
     return ( <div>
         <table>
@@ -60,7 +69,7 @@ const ViewCategory = ({categories,editCategory,deleteCategory,handleEdit}) => {
                 <td>{index+1}</td>
                 <td>{item.name}</td>
                 <td><button onClick={()=>handleEdit(item.id)}>Edit</button></td>
-                <td><button onClick={()=>deleteCategory(item.id)}>Delete</button></td>
+                <td><button onClick={()=>handleDelete(item.id)}>Delete</button></td>
                 </tr>
             ))}
             
