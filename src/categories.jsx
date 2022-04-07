@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 
-const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,updateCategory}) => {
-    const initialState = {id:"",name:""}
+const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,transactionType,updateCategory}) => {
+    const initialState = {id:"",name:"",type:transactionType.expense}
     const [category,setCategory] = useState({})
     
     useEffect(()=>{
@@ -16,7 +16,8 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,up
     },[currentCategory,isEdit])
 
     const handleChange = (e)=>{
-        setCategory({...category,name:e.target.value})
+        const name = e.target.name
+        setCategory({...category,[name]:e.target.value})
     }
     const handleSubmit = (e)=>{
         e.preventDefault()
@@ -37,6 +38,10 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,up
             <form onSubmit={handleSubmit}>
                 <label> Name </label>
                 <input type="text" name="name" value={category.name} onChange={handleChange}/>
+                <label> Type </label>
+                <select name="type" value={category.type} onChange={handleChange}>
+                {Object.keys(transactionType).map((key,index)=><option value={transactionType[key]}>{key}</option>)}
+                </select>
                 <button>{!isEdit?"SAVE":"UPDATE"}</button>
             </form>
     </div> );
@@ -44,7 +49,7 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,up
  
 
 
-const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteCategory,handleEdit}) => {
+const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteCategory,handleEdit,transactionType}) => {
     
     const handleDelete  = (id)=>{
         deleteCategory(id)
@@ -61,6 +66,7 @@ const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteC
                 <td>ID</td>
                 <td>sr.no</td>
                 <td>Name</td>
+                <td>Mode</td>
                 <td colSpan={2}>action</td>
             </tr>
             {categories.map((item,index)=>(
@@ -68,6 +74,8 @@ const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteC
                 <td>{item.id}</td>
                 <td>{index+1}</td>
                 <td>{item.name}</td>
+                <td>{transactionType.income==item.type?"INCOME":"EXPENSE"}</td>
+
                 <td><button onClick={()=>handleEdit(item.id)}>Edit</button></td>
                 <td><button onClick={()=>handleDelete(item.id)}>Delete</button></td>
                 </tr>

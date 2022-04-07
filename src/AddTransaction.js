@@ -6,9 +6,9 @@ import { useLocation } from 'react-router-dom'
 const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
     
     
-    const initialState = {id:Date.now(),type:transactionType.expense,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    const initialState = {id:Date.now(),type:transactionType.income,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
-    const [type,setType] = useState(transactionType.expense)
+    const [type,setType] = useState(transactionType.income)
 
     useEffect(()=>{
       
@@ -65,6 +65,7 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
         e.preventDefault()
         if(type!=item){
             setType(item)
+            setTransaction({...transaction,type:item})
         }
 
     }
@@ -88,8 +89,15 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
                
             </select>
             <label>Category : </label>
-            <select name="category" value={transaction.categoryId}  onChange={handleChange} >
-                {categories.map((item)=>(  <option key={item.id} value={item.id}>{item.name}</option> ))}
+            <select name="category" value={transaction.categoryId}  onChange={handleChange}>
+                <option value={0}>No select</option>
+                {categories.map((item)=>{
+                    if(item.type==transaction.type){
+                    return (<option key={item.id} value={item.id}>{item.name}</option>)
+                    }
+
+                    
+                    })}
                
             </select>
             <label>
