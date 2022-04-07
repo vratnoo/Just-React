@@ -54,36 +54,81 @@ table{
         border: 1px solid gray;
     }
 }
-
+$green: #068e06;
+$red: red;
+$light-red: #f6cfcf;
+$light-green: #def0de;
 .income{
-    background-color: rgb(191, 202, 191);
-    color: green;
+    background-color: $light-green;
+    color: $green;
     padding:  0 1rem;
 
     input,input[type="date"],select,textarea{
-        background-color: rgb(191, 202, 191);
-        border: 1px solid green;
+        background-color: $light-green;
+        border: 1px solid $green;
     }
 
     .active{
-        background-color: green;
+        background-color: $green;
         color: white;
     }
 }
 
 .expense{
-    background-color: rgb(255, 204, 204);
-    color: red;
-    padding:  0 1rem;
+    background-color: $light-red;
+    color: $red;
+    padding:  0 1rem;   
 
     input,input[type="date"],select,textarea{
-        background-color: rgb(255, 204, 204);
-        border: 1px solid red;
+        background-color: $light-red;
+        border: 1px solid $red;
     }
 
     .active{
-        background-color: red;
+        background-color: $red;
         color: white;
     }
 
+}
+
+.meter{
+    display: flex;
+    .income,.expense,.net-income{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.3rem;
+        border: 3px solid;
+        border-radius: 8px;
+        margin: 0.5rem;
+
+    
+    }
+
+    .income{
+
+        &::before{
+            content: "INCOME";
+            font-size: 1rem;
+        }
+    }
+    .expense{
+        &::before{
+            content: "EXPENSE";
+            font-size: 1rem;
+        }
+    }
+
+    .net-income{
+        &::before{
+            content: "NET BALANCE";
+            font-size: 1rem;
+        }
+    }
+    h1{
+        font-size: 2rem;
+        font-weight: 600;
+
+    }
 }

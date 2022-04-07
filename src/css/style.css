@@ -123,31 +123,61 @@ table th, table td {
 }
 
 .income {
-  background-color: #bfcabf;
-  color: green;
+  background-color: #def0de;
+  color: #068e06;
   padding: 0 1rem;
 }
 .income input, .income input[type=date], .income select, .income textarea {
-  background-color: #bfcabf;
-  border: 1px solid green;
+  background-color: #def0de;
+  border: 1px solid #068e06;
 }
 .income .active {
-  background-color: green;
+  background-color: #068e06;
   color: white;
 }
 
 .expense {
-  background-color: #ffcccc;
+  background-color: #f6cfcf;
   color: red;
   padding: 0 1rem;
 }
 .expense input, .expense input[type=date], .expense select, .expense textarea {
-  background-color: #ffcccc;
+  background-color: #f6cfcf;
   border: 1px solid red;
 }
 .expense .active {
   background-color: red;
   color: white;
+}
+
+.meter {
+  display: flex;
+}
+.meter .income, .meter .expense, .meter .net-income {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.3rem;
+  border: 3px solid;
+  border-radius: 8px;
+  margin: 0.5rem;
+}
+.meter .income::before {
+  content: "INCOME";
+  font-size: 1rem;
+}
+.meter .expense::before {
+  content: "EXPENSE";
+  font-size: 1rem;
+}
+.meter .net-income::before {
+  content: "NET BALANCE";
+  font-size: 1rem;
+}
+.meter h1 {
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 /*# sourceMappingURL=style.css.map */

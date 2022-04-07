@@ -13,7 +13,13 @@ import {
 function App() {
     const transactionType = {income:1,expense:2}
     const [accounts,setAccounts] = useState([{id:0,name:"CASH"},{id:1,name:"ONLINE"}])
-    const [categories,setCategories] = useState([{id:1,name:"Food",type:transactionType.expense},{id:2,name:"Bills",type:transactionType.expense},{id:3,name:"Transport",type:transactionType.expense}])
+    const [categories,setCategories] = useState([
+                      {id:1,name:"Food",type:transactionType.expense},
+                      {id:2,name:"Bills",type:transactionType.expense},
+                      {id:3,name:"Transport",type:transactionType.expense},
+                      {id:4,name:"Salary",type:transactionType.income}
+                    
+                    ])
     const [transactionList,setTransactionList] = useState([]);
     const [isEdit,setIsEdit] = useState(false)
     const [editId,setEditId] = useState("")

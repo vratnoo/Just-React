@@ -3,10 +3,31 @@ import React from 'react';
 
 const ShowTransaction = ({transactionType,accounts,categories,transactionList,handleDelete,handleEdit})=>{
 
-    
+    let totalIncome = 0
+    let totalExpense = 0
+    transactionList.map((item)=>{
+        if(item.type==transactionType.income){
+            totalIncome+=parseInt(item.amount)
+        }else{
+            totalExpense+=parseInt(item.amount)
+        }
+
+    })
+
     return(
         <div>
             <h2>View Transaction</h2>
+            <div className='meter'>
+                <div className="income">
+                     <h1>{totalIncome}</h1>
+                </div>
+                <div className="expense">
+                    <h1>{totalExpense}</h1>
+                </div>
+                <div className="net-income">
+                    <h1>{totalIncome-totalExpense}</h1>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>

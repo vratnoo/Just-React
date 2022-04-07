@@ -6,9 +6,9 @@ import { useLocation } from 'react-router-dom'
 const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
     
     
-    const initialState = {id:Date.now(),type:transactionType.income,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    const initialState = {id:Date.now(),type:transactionType.expense,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
-    const [type,setType] = useState(transactionType.income)
+    const [type,setType] = useState(transactionType.expense)
 
     useEffect(()=>{
       
@@ -17,6 +17,7 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
                 const currentTransaction = transactionList.filter((item)=>item.id==editId)
                 // console.log(currentTransaction)
                 setTransaction(currentTransaction[0])
+                setType(currentTransaction[0].type)
             }else{
                 
                 setTransaction(initialState)
