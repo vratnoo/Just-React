@@ -1,5 +1,12 @@
 import React from 'react';
 
+const getDay = (item)=>{
+    const date = new Date(item)
+    const day  = date.toLocaleDateString('en-us', {weekday: 'short' });
+    const localDate  = date.toLocaleDateString('en-in');
+    return localDate+" "+day
+    
+}
 
 const ShowTransaction = ({transactionType,accounts,categories,transactionList,handleDelete,handleEdit})=>{
 
@@ -13,6 +20,20 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
         }
 
     })
+
+    transactionList.sort((item1,item2)=>{
+        return new Date(item1.date) - new Date(item2.date)
+    })
+    const TranData = transactionList.reduce((total,item)=>{
+        const date = new Date(item.date)
+            if(total[date]==undefined){
+                total[date] = []
+            }
+            total[date].push(item)
+            return total
+    },{})
+
+    console.log(TranData)
 
     return(
         <div>
@@ -45,6 +66,8 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
                 </thead>
                 <tbody>
                     {transactionList.map((item)=>(
+                        <>
+                    {item.date}
                     <tr className={item.type==transactionType.income?"income":"expense"}>
                         <td>{item.id}</td>
                         <td>{item.type==transactionType.expense?"Expense":"Income"}</td>
@@ -55,11 +78,11 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
                         {/* <td>{`${item.categoryId}+${categories}`}</td> */}
                         <td>{item.notes}</td>
                         <td>{item.desc}</td>
-                        <td>{item.date}</td>
+                        <td>{getDay(item.date)}</td>
                         <td><button key={item.id} name="edit" onClick={()=>handleEdit(item.id)}>Edit</button></td>
                         <td><button key={item.id} name="delete" onClick={()=>handleDelete(item.id)}>Delete</button></td>
                         
-                    </tr>))}
+                    </tr></>))}
                     <tr>
                         <td colSpan={3}>Total</td>
                         <td>{transactionList.reduce((total,item)=>{
