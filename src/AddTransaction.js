@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom'
 
 const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
     
-    
-    const initialState = {id:Date.now(),type:transactionType.expense,date:"12-12-12",amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    let today = new Date().toISOString().slice(0, 10)
+    const initialState = {id:Date.now(),type:transactionType.expense,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
     const [type,setType] = useState(transactionType.expense)
 

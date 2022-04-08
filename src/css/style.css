@@ -150,6 +150,17 @@ table th, table td {
   color: white;
 }
 
+.Trans_group {
+  font-weight: 600;
+}
+.Trans_group .income, .Trans_group .expense, .Trans_group .net-income {
+  font-size: 1.2rem;
+}
+.Trans_group .date {
+  font-size: 1.3rem;
+  background-color: beige;
+}
+
 .meter {
   display: flex;
 }
@@ -162,6 +173,7 @@ table th, table td {
   border: 3px solid;
   border-radius: 8px;
   margin: 0.5rem;
+  font-weight: 600;
 }
 .meter .income::before {
   content: "INCOME";
