@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import  AddTransaction from "./AddTransaction"
 import  ShowTransaction from "./ShowTransaction"
+import  TransactionChart from "./Stats"
 import Navigation from './component/Navigation'
 import Category from "./categories"
 
@@ -68,6 +69,7 @@ function App() {
   const AddProps = {transactionType,accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
   const ShowProps = {transactionType,accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
   const CategoryProps = {categories,addCategory,deleteCategory,updateCategory,transactionType}
+  const ChartProps = {transactionList,categories,transactionType}
   return (
     <>
 
@@ -77,6 +79,7 @@ function App() {
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
         <Route path="/show" element={ <ShowTransaction  {...ShowProps} />} />
         <Route path="/categories" element={ <Category  {...CategoryProps} />} />
+        <Route path="/stats" element={ <TransactionChart {...ChartProps}/>} />
     </Routes>
       </div>
       

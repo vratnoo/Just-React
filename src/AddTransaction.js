@@ -6,9 +6,9 @@ import { useLocation } from 'react-router-dom'
 const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
     
     let today = new Date().toISOString().slice(0, 10)
-    const initialState = {id:Date.now(),type:transactionType.expense,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
-    const [transaction,setTransaction] = useState(initialState)
     const [type,setType] = useState(transactionType.expense)
+    const initialState = {id:Date.now(),type:type,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    const [transaction,setTransaction] = useState(initialState)
 
     useEffect(()=>{
       
@@ -26,7 +26,7 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
         
         
 
-    },[isEdit])
+    },[isEdit,type])
 
     const handleChange = (e)=>{
         let name = e.target.name
