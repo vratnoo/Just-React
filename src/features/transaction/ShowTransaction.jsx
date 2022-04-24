@@ -1,5 +1,8 @@
 import React from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCategories } from '../categories/categorySlice';
+import {fetchTransaction} from './transactionSlice'
+import { transType, trabsactionDelete } from './transactionSlice';
 const getDay = (item)=>{
     const date = new Date(item)
     const day  = date.toLocaleDateString('en-us', {weekday: 'short' });
@@ -8,12 +11,16 @@ const getDay = (item)=>{
     
 }
 
-const ShowTransaction = ({transactionType,accounts,categories,transactionList,handleDelete,handleEdit})=>{
-
+const ShowTransaction = ({transactionType,accounts,transactionList,handleEdit})=>{
+    const transactions = useSelector(fetchTransaction)
+    const categories = useSelector(fetchCategories)
+    const dispatch = useDispatch()
+    console.log(transactions)
+    transactionList  = transactions.entities
     let totalIncome = 0
     let totalExpense = 0
     transactionList.map((item)=>{
-        if(item.type==transactionType.income){
+        if(item.type==transType.INCOME){
             totalIncome+=parseInt(item.amount)
         }else{
             totalExpense+=parseInt(item.amount)
@@ -21,7 +28,9 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
 
     })
 
-  
+    const handleDelete = (id)=>{
+        dispatch(trabsactionDelete(id))
+    }
     const TranData = transactionList.reduce((total,item)=>{
         const date = item.date
         const income = 0;
@@ -30,7 +39,7 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
                 total[date] = {Data:[],income:0,expense:0}
             }
             total[date].Data.push(item)
-            if(item.type==transactionType.income){
+            if(item.type==transType.INCOME){
                 total[date].income+=parseInt(item.amount)
             }else{
                 total[date].expense+=parseInt(item.amount)
@@ -88,9 +97,9 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
                           </tr>
 
                             {TranData[transaction_item].Data.map((item)=>(
-                                <tr className={item.type==transactionType.income?"income":"expense"}>
+                                <tr className={item.type==transType.INCOME?"income":"expense"}>
                                 <td>{item.id}</td>
-                                <td>{item.type==transactionType.expense?"Expense":"Income"}</td>
+                                <td>{item.type==transType.EXPENSE?"Expense":"Income"}</td>
                                 <td>{accounts.map((account)=>(account.id===item.accountId)?account.name:"")}</td>
                                 <td>{item.amount}</td>
                                 <td>{categories.map((category)=>(category.id===item.categoryId)?category.name:"")}</td>
@@ -110,16 +119,7 @@ const ShowTransaction = ({transactionType,accounts,categories,transactionList,ha
                    })}
                     <tr>
                         <td colSpan={3}>Total</td>
-                        <td>{transactionList.reduce((total,item)=>{
-                            if(item.type===transactionType.income){
-                                
-                                return total+parseInt(item.amount)
-                            }else{
-                                
-                                return total-parseInt(item.amount)
-                            }
-                            
-                            },0)}</td>
+                        <td>{totalIncome-totalExpense}</td>
                         <td colSpan={6}></td>
                     </tr>
                      

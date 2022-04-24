@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import  AddTransaction from "./AddTransaction"
-import  ShowTransaction from "./ShowTransaction"
+import  AddTransaction from "./features/transaction/AddTransaction"
+import  ShowTransaction from "./features/transaction/ShowTransaction"
 import  TransactionChart from "./Stats"
 import Navigation from './component/Navigation'
 import Category from "./categories"
@@ -23,7 +23,7 @@ function App() {
                     ])
     const [transactionList,setTransactionList] = useState([]);
     const [isEdit,setIsEdit] = useState(false)
-    const [editId,setEditId] = useState("")
+    const [editId,setEditId] = useState(null)
     const navigate = useNavigate()
 
   useEffect(()=>{
@@ -66,8 +66,8 @@ function App() {
     
 
   
-  const AddProps = {transactionType,accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
-  const ShowProps = {transactionType,accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
+  const AddProps = {setEditId,transactionType,accounts,categories,transactionList,setIsEdit,addTransaction,updateTransaction,isEdit,editId,}
+  const ShowProps = {setEditId,transactionType,accounts,categories,transactionList,setTransactionList,handleDelete,handleEdit}
   const CategoryProps = {categories,addCategory,deleteCategory,updateCategory,transactionType}
   const ChartProps = {transactionList,categories,transactionType}
   return (

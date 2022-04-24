@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  transactionAdd,
+  transType,
+  fetchTransaction,
+  transactionUpdate,
+} from "./transactionSlice";
+import { fetchCategories } from '../categories/categorySlice';
 
 
-
-const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transactionList,setTransactionList,editId,isEdit,addTransaction,updateTransaction})=>{
-    
+const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setEditId,addTransaction,updateTransaction})=>{
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const transactions = useSelector(fetchTransaction)
+    const categories = useSelector(fetchCategories)
+    const [type,setType] = useState(transType.EXPENSE)
     let today = new Date().toISOString().slice(0, 10)
-    const [type,setType] = useState(transactionType.expense)
     const initialState = {id:Date.now(),type:type,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
+    const transactionList  = transactions.entities
+
 
     useEffect(()=>{
       
         
-            if(isEdit && editId!==""){
-                const currentTransaction = transactionList.filter((item)=>item.id==editId)
+            if(editId!==null){
+                const currentTransaction = transactionList.find((item)=>item.id==editId)
                 // console.log(currentTransaction)
-                setTransaction(currentTransaction[0])
-                setType(currentTransaction[0].type)
+                setTransaction(currentTransaction)
+                setType(currentTransaction.type)
             }else{
                 
                 setTransaction(initialState)
-                setIsEdit(false)
+                setEditId(null)
             }
         
         
 
-    },[isEdit,type])
+    },[editId])
 
     const handleChange = (e)=>{
         let name = e.target.name
@@ -49,13 +61,18 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
     const handleSubmit = (e)=>{
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
-        if(isEdit==true && editId!==""){
-            updateTransaction({...transaction,type:type})    
+        if(editId!==null){
+            dispatch(transactionUpdate(transaction))  
+            navigate('/show')
+
+            // updateTransaction({...transaction,type:type})  
         }else{
-            
-            addTransaction({...transaction,id:Date.now(),type:type})
+            dispatch(transactionAdd(transaction))
+            // addTransaction({...transaction,id:Date.now(),type:type})
         }
         setTransaction(initialState)
+
+        
 
         
        
@@ -72,12 +89,12 @@ const AddTransaction = ({transactionType,accounts,categories,setIsEdit,transacti
     }
 
     return(
-        <div className={(transactionType.income==type)?"income":"expense"}>
-            {isEdit?(<h2>Edit Transaction</h2>):(<h2>Add Transaction</h2>)}
+        <div className={(transType.INCOME==type)?"income":"expense"}>
+            {editId!==null?(<h2>Edit Transaction</h2>):(<h2>Add Transaction</h2>)}
             <form onSubmit={handleSubmit}>
                 <fieldset>
-                <button className={(transactionType.income==type)?"active":""} onClick={(e)=>handleClick(e,transactionType.income)}>Income</button>
-                <button className={(transactionType.expense==type)?"active":""} onClick={(e)=>handleClick(e,transactionType.expense)}>Expense</button>
+                <button className={(transType.INCOME==type)?"active":""} onClick={(e)=>handleClick(e,transType.INCOME)}>Income</button>
+                <button className={(transType.EXPENSE==type)?"active":""} onClick={(e)=>handleClick(e,transType.EXPENSE)}>Expense</button>
                 </fieldset>
             <label>
                     Date

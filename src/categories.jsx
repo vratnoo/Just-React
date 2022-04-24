@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchCategories,
+  categoryAdd,
+  categoryUpdate,
+  categoryDelete,
+} from "./features/categories/categorySlice";
+import {transType} from './features/transaction/transactionSlice'
 
-
-const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,transactionType,updateCategory}) => {
-    const initialState = {id:"",name:"",type:transactionType.expense}
+const AddCategory = ({addCategory,isEdit,setIsEdit,currentCategory,transactionType,updateCategory}) => {
+    const initialState = {id:"",name:"",type:transType.EXPENSE}
+    const categories  = useSelector(fetchCategories)
     const [category,setCategory] = useState({})
-    
+    const dispatch = useDispatch()
     useEffect(()=>{
        
         if(isEdit && currentCategory!==""){
@@ -22,11 +30,13 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,tr
     const handleSubmit = (e)=>{
         e.preventDefault()
         if(isEdit && currentCategory!==""){
-            updateCategory(category)
+            // updateCategory(category)
+            dispatch(categoryUpdate(category))
             setIsEdit(false)
             setCategory(initialState)
         }else{
-            addCategory({...category,id:Date.now()})
+            // addCategory({...category,id:Date.now()})
+            dispatch(categoryAdd({...category,id:Date.now()}))
             setCategory(initialState)
         }
 
@@ -40,7 +50,7 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,tr
                 <input type="text" name="name" value={category.name} onChange={handleChange}/>
                 <label> Type </label>
                 <select name="type" value={category.type} onChange={handleChange}>
-                {Object.keys(transactionType).map((key,index)=><option value={transactionType[key]}>{key}</option>)}
+                {Object.keys(transType).map((key,index)=><option value={transType[key]}>{key}</option>)}
                 </select>
                 <button>{!isEdit?"SAVE":"UPDATE"}</button>
             </form>
@@ -49,10 +59,12 @@ const AddCategory = ({categories,addCategory,isEdit,setIsEdit,currentCategory,tr
  
 
 
-const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteCategory,handleEdit,transactionType}) => {
-    
+const ViewCategory = ({currentCategory,setIsEdit,editCategory,deleteCategory,handleEdit,transactionType}) => {
+    const categories = useSelector(fetchCategories)
+    const dispatch  = useDispatch()
     const handleDelete  = (id)=>{
-        deleteCategory(id)
+        // deleteCategory(id)
+        dispatch(categoryDelete(id))
         if(currentCategory==id){
             setIsEdit(false)
         }
@@ -64,7 +76,6 @@ const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteC
         <table>
             <tr>
                 <td>ID</td>
-                <td>sr.no</td>
                 <td>Name</td>
                 <td>Mode</td>
                 <td colSpan={2}>action</td>
@@ -72,9 +83,8 @@ const ViewCategory = ({categories,currentCategory,setIsEdit,editCategory,deleteC
             {categories.map((item,index)=>(
                 <tr key={item.id}>
                 <td>{item.id}</td>
-                <td>{index+1}</td>
                 <td>{item.name}</td>
-                <td>{transactionType.income==item.type?"INCOME":"EXPENSE"}</td>
+                <td>{transType.INCOME==item.type?"INCOME":"EXPENSE"}</td>
 
                 <td><button onClick={()=>handleEdit(item.id)}>Edit</button></td>
                 <td><button onClick={()=>handleDelete(item.id)}>Delete</button></td>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Navigation = (props)=>{
     const {setIsEdit} = props
     const handleClick = (e)=>{
-        // e.preventDafault()
+        e.preventDafault()
         setIsEdit(false)
     }
     return(
