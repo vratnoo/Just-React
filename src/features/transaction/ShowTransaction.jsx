@@ -11,15 +11,14 @@ const getDay = (item)=>{
     
 }
 
-const ShowTransaction = ({transactionType,accounts,transactionList,handleEdit})=>{
+const ShowTransaction = ({accounts,handleEdit})=>{
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
     const dispatch = useDispatch()
-    console.log(transactions)
-    transactionList  = transactions.entities
+
     let totalIncome = 0
     let totalExpense = 0
-    transactionList.map((item)=>{
+    transactions.map((item)=>{
         if(item.type==transType.INCOME){
             totalIncome+=parseInt(item.amount)
         }else{
@@ -31,7 +30,7 @@ const ShowTransaction = ({transactionType,accounts,transactionList,handleEdit})=
     const handleDelete = (id)=>{
         dispatch(trabsactionDelete(id))
     }
-    const TranData = transactionList.reduce((total,item)=>{
+    const TranData = transactions.reduce((total,item)=>{
         const date = item.date
         const income = 0;
         const expense = 0;

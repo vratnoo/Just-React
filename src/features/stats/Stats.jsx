@@ -2,15 +2,20 @@ import React from 'react';
 import {ArcElement, Chart as ChartJS,Legend, Tooltip,Title} from 'chart.js'
 import { Pie } from 'react-chartjs-2'
 import autocolors from 'chartjs-plugin-autocolors';
+import {fetchTransaction, transType} from '../transaction/transactionSlice'
+import { useSelector } from 'react-redux';
+import { fetchCategories } from '../categories/categorySlice';
  
 ChartJS.register(ArcElement,Legend,Tooltip,autocolors,Title)
 
 // export const labels = ["January","Februray","March","April","May","June","July"] const labels = 
 
 
-function TransactionChart({transactionList,categories,transactionType}) {
-    const type = transactionType.expense
-    const datas = transactionList.reduce((total,item)=>{
+function TransactionChart() {
+    const transactions = useSelector(fetchTransaction)
+    const categories = useSelector(fetchCategories)
+    const type = transType.EXPENSE
+    const datas = transactions.reduce((total,item)=>{
         if(total[item.categoryId]===undefined){
             total[item.categoryId] = {amount:0,type:item.type}
         }
@@ -20,21 +25,20 @@ function TransactionChart({transactionList,categories,transactionType}) {
 
     },{})
     const ChartProps = {
-        categories,datas,transactionType
+        categories,datas,transType
     }
 
     return(
         <div style={{display:'flex'}}>
-            <div style={{width:'100%'}}> <PieChart {...ChartProps} type={transactionType.expense}/></div>
-            <div style={{width:'100%'}}><PieChart {...ChartProps} type={transactionType.income}/></div>
+            <div style={{width:'100%'}}> <PieChart {...ChartProps} type={transType.EXPENSE}/></div>
+            <div style={{width:'100%'}}><PieChart {...ChartProps} type={transType.INCOME}/></div>
         
         </div>
     )
    
 }
 
-const PieChart = ({datas,categories,type,transactionType})=>{
-    console.log(transactionType)
+const PieChart = ({datas,categories,type,transType})=>{
 
     const options = {
         responsive:true,
@@ -44,7 +48,7 @@ const PieChart = ({datas,categories,type,transactionType})=>{
             },
             title: {
                 display: true,
-                text: ((type==transactionType.income)?"INCOME CHART":"EXPENSE CHART"),
+                text: ((type==transType.INCOME)?"INCOME CHART":"EXPENSE CHART"),
                 padding: {
                     top: 10,
                     bottom: 30

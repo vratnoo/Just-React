@@ -2,10 +2,9 @@ import React from 'react'
 import { Link } from "react-router-dom";
 
 const Navigation = (props)=>{
-    const {setIsEdit} = props
+    const {setEditId} = props
     const handleClick = (e)=>{
-        e.preventDafault()
-        setIsEdit(false)
+        setEditId(null)
     }
     return(
         <nav>

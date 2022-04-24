@@ -19,7 +19,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
     let today = new Date().toISOString().slice(0, 10)
     const initialState = {id:Date.now(),type:type,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
-    const transactionList  = transactions.entities
+    const transactionList  = transactions
 
 
     useEffect(()=>{
@@ -33,6 +33,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
             }else{
                 
                 setTransaction(initialState)
+                setType(transType.EXPENSE)
                 setEditId(null)
             }
         

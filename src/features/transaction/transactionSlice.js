@@ -65,6 +65,6 @@ export const transactionUpdate = (data)=>{
 
 // selectors
 export const fetchTransaction = (state)=>{
-  return state.transactions
+  return state.transactions.entities
 
 }
