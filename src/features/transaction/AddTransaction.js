@@ -6,28 +6,32 @@ import {
   transType,
   fetchTransaction,
   transactionUpdate,
+  addTransactionThunk,
+  updateTransactionThunk,
 } from "./transactionSlice";
 import { fetchCategories } from '../categories/categorySlice';
-
+import { getDate,isValidDate,todayDate } from '../../helper/utility';
 
 const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setEditId,addTransaction,updateTransaction})=>{
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const allTransaction = useSelector(state=>state.transactions.entities)
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
+    const loadingStatus = useSelector(state=>state.transactions.status)
     const [type,setType] = useState(transType.EXPENSE)
-    let today = new Date().toISOString().slice(0, 10)
-    const initialState = {id:Date.now(),type:type,date:today,amount:0,accountId:0,categoryId:0,notes:"",desc:""}
+    
+    const initialState = {type:type,date:todayDate(),amount:0,accountId:'cash',categoryId:'0',notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
     const transactionList  = transactions
 
-
+    console.log("transactionList here: ",allTransaction)
     useEffect(()=>{
       
-        
             if(editId!==null){
+                console.log(transactionList)
                 const currentTransaction = transactionList.find((item)=>item.id==editId)
-                // console.log(currentTransaction)
+                console.log(currentTransaction)
                 setTransaction(currentTransaction)
                 setType(currentTransaction.type)
             }else{
@@ -47,14 +51,26 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
         if(name=="account"){
             name = "accountId"
             value = parseInt(value)
+            console.log(value)
+        }
+
+        if(name=='amount'){
+            value = parseInt(value)
         }
 
         if(name=="category"){
             name = "categoryId"
-            value = parseInt(value)
         }
-        console.log(transaction)
+        if(name=="date"){
+            console.log("invalid date si ",value)
+            if(isValidDate(value)){
+                value = new Date(value).toISOString().slice(0, 10)
+            }else{
+                value = new Date().toISOString().slice(0, 10)
+            }
+        }
         setTransaction({...transaction,[name]:value})
+        console.log(transaction)
         
         
     }
@@ -62,22 +78,23 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
     const handleSubmit = (e)=>{
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
+        console.log('added/updated transaction',transaction)
         if(editId!==null){
-            dispatch(transactionUpdate(transaction))  
+            dispatch(updateTransactionThunk(transaction))  
             navigate('/show')
 
             // updateTransaction({...transaction,type:type})  
         }else{
-            dispatch(transactionAdd(transaction))
+            dispatch(addTransactionThunk(transaction))
             // addTransaction({...transaction,id:Date.now(),type:type})
         }
         setTransaction(initialState)
 
+    }
         
 
         
        
-    }
 
     const handleClick = (e,item)=>{
         
@@ -88,9 +105,11 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
         }
 
     }
-
+    const loader = <div className='loader'><div className="lds-ripple"><div></div><div></div></div></div>
     return(
+
         <div className={(transType.INCOME==type)?"income":"expense"}>
+            {loadingStatus=='loading'?loader:''}
             {editId!==null?(<h2>Edit Transaction</h2>):(<h2>Add Transaction</h2>)}
             <form onSubmit={handleSubmit}>
                 <fieldset>
@@ -101,7 +120,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
                     Date
             </label>
                 
-            <input type="date" name="date"  value={transaction.date} onChange={handleChange}/>
+            <input type="date" name="date"  value={getDate(transaction.date)} onChange={handleChange}/>
             <label>Account : </label>
             <select name="account"  value={transaction.accountId} onChange={handleChange} >
                 {accounts.map((item)=>( <option key={item.id} value={item.id}>{item.name}</option>))}

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import  {fetchTransactionThunk} from "./features/transaction/transactionSlice"
+import {fetchCategoriesThunk} from "./features/categories/categorySlice"
 import  AddTransaction from "./features/transaction/AddTransaction"
 import  ShowTransaction from "./features/transaction/ShowTransaction"
 import  TransactionChart from "./features/stats/Stats"
 import Navigation from './component/Navigation'
 import Category from "./categories"
-
+import FilterSection from './features/filter/filterSection'
+import { useDispatch } from 'react-redux'
 import {
   Routes,
   Route,
@@ -12,15 +15,21 @@ import {
 } from "react-router-dom";
 
 function App() {
-    const accounts = [{id:0,name:"CASH"},{id:1,name:"ONLINE"}]
+    const accounts = [{id:'cash',name:"CASH"},{id:'online',name:"ONLINE"}]
     const [editId,setEditId] = useState(null)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
  
 
   useEffect(()=>{
     console.log("edit mode is: "+editId)
+    if(editId===null){
+      dispatch(fetchTransactionThunk())
+      dispatch(fetchCategoriesThunk())
+    }
 
-  },[editId])
+
+  },[])
   
   
   const handleEdit = (id)=>{

@@ -15,6 +15,7 @@ function TransactionChart() {
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
     const type = transType.EXPENSE
+    console.log("stats transaction is her",transactions)
     const datas = transactions.reduce((total,item)=>{
         if(total[item.categoryId]===undefined){
             total[item.categoryId] = {amount:0,type:item.type}
@@ -62,8 +63,12 @@ const PieChart = ({datas,categories,type,transType})=>{
     const labelId = Object.keys(datas).filter((item)=>datas[item].type==type)
    
     const labels = labelId.map((item)=>{
-        const value =  categories.filter((category)=>(category.id==item))
-        return value[0].name
+        const value =  categories.find((category)=>(category.id==item))
+        console.log("values is here",value)
+        if(value===undefined){
+            return 'not-specified'
+        }
+        return value.name
     })
   
 

@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Loader } from './component/loader';
 import {
   fetchCategories,
   categoryAdd,
   categoryUpdate,
   categoryDelete,
+  addCategoryThunk,
+  updateCategoryThunk,
+  deleteCategoryThunk
 } from "./features/categories/categorySlice";
 import {transType} from './features/transaction/transactionSlice'
 
 const AddCategory = ({addCategory,isEdit,setIsEdit,currentCategory,transactionType,updateCategory}) => {
     const initialState = {id:"",name:"",type:transType.EXPENSE}
     const categories  = useSelector(fetchCategories)
+    
     const [category,setCategory] = useState({})
     const dispatch = useDispatch()
     useEffect(()=>{
@@ -31,18 +36,21 @@ const AddCategory = ({addCategory,isEdit,setIsEdit,currentCategory,transactionTy
         e.preventDefault()
         if(isEdit && currentCategory!==""){
             // updateCategory(category)
-            dispatch(categoryUpdate(category))
+            dispatch(updateCategoryThunk(category))
+            // dispatch(categoryUpdate(category))
             setIsEdit(false)
             setCategory(initialState)
         }else{
             // addCategory({...category,id:Date.now()})
-            dispatch(categoryAdd({...category,id:Date.now()}))
+            dispatch(addCategoryThunk(category))
+            // dispatch(categoryAdd({...category,id:Date.now()}))
             setCategory(initialState)
         }
 
     }
         
     return ( <div>
+       
         <h2>{!isEdit?"Add Category":"Edit Category"}</h2>
         <p>id: {category.id}</p>
             <form onSubmit={handleSubmit}>
@@ -64,7 +72,8 @@ const ViewCategory = ({currentCategory,setIsEdit,editCategory,deleteCategory,han
     const dispatch  = useDispatch()
     const handleDelete  = (id)=>{
         // deleteCategory(id)
-        dispatch(categoryDelete(id))
+        // dispatch(categoryDelete(id))
+        dispatch(deleteCategoryThunk(id))
         if(currentCategory==id){
             setIsEdit(false)
         }
@@ -99,6 +108,7 @@ const Category = (props) => {
     const {categories} = props
     const [isEdit,setIsEdit] = useState(false)
     const [currentCategory,setCurrentCategory] = useState("")
+    const loadingStatus = useSelector(state=>state.categories.status)
 
     const handleEdit = (id)=>{
         setIsEdit(true)
@@ -112,6 +122,7 @@ const Category = (props) => {
     const ExtraProps = {...props,isEdit,setIsEdit,handleEdit,currentCategory}
     return (
         <>
+            <Loader loadingStatus={loadingStatus} />
             <ViewCategory {...ExtraProps}/>
             <AddCategory {...ExtraProps}/>
         </>

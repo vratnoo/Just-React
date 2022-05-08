@@ -1,24 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../categories/categorySlice';
-import {fetchTransaction} from './transactionSlice'
-import { transType, trabsactionDelete } from './transactionSlice';
-const getDay = (item)=>{
-    const date = new Date(item)
-    const day  = date.toLocaleDateString('en-us', {weekday: 'short' });
-    const localDate  = date.toLocaleDateString('en-in');
-    return localDate+" "+day
-    
-}
-
+import {fetchTransaction, fetchTransactionThunk} from './transactionSlice'
+import { transType, deleteTransactionThunk } from './transactionSlice';
+import FilterSection from '../filter/filterSection';
+import { fetchFilterMonth } from '../filter/filterSlice';
+import { getDay,isValidDate } from '../../helper/utility';
 const ShowTransaction = ({accounts,handleEdit})=>{
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
+    const filterMonth = useSelector(fetchFilterMonth)
+    const loadingStatus = useSelector(state=>state.transactions.status)
+    console.log("check data",transactions)
+    const filterdTransaction = transactions.filter((item)=>{
+        const date = new Date(item.date)
+        console.log("item date === filter date",item.date,filterMonth)
+        return date.getMonth() === filterMonth.getMonth()
+    })
     const dispatch = useDispatch()
 
     let totalIncome = 0
     let totalExpense = 0
-    transactions.map((item)=>{
+    filterdTransaction.map((item)=>{
         if(item.type==transType.INCOME){
             totalIncome+=parseInt(item.amount)
         }else{
@@ -28,9 +31,10 @@ const ShowTransaction = ({accounts,handleEdit})=>{
     })
 
     const handleDelete = (id)=>{
-        dispatch(trabsactionDelete(id))
+        // dispatch(transactionDelete(id))
+        dispatch(deleteTransactionThunk(id))
     }
-    const TranData = transactions.reduce((total,item)=>{
+    const TranData = filterdTransaction.reduce((total,item)=>{
         const date = item.date
         const income = 0;
         const expense = 0;
@@ -46,14 +50,22 @@ const ShowTransaction = ({accounts,handleEdit})=>{
             return total
     },{})
 
+    console.log("Trans data",TranData)
+
     const keys = Object.keys(TranData).sort((item1,item2)=>{
         return new Date(item2) - new Date(item1)
     })
 
-    console.log(keys)
+    console.log("loading status",loadingStatus)
 
+    useEffect(()=>{
+        // dispatch(fetchTransactionThunk())
+    },[])
+    const loader = <div className='loader'><div class="lds-ripple"><div></div><div></div></div></div>
     return(
         <div>
+            {(loadingStatus==='loading')?loader:null}
+            <FilterSection/>
             <h2>View Transaction</h2>
             <div className='meter'>
                 <div className="income">

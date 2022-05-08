@@ -1,18 +1,21 @@
+import { collection, addDoc, doc,getDocs,setDoc,deleteDoc,updateDoc } from "firebase/firestore/lite";
+import { firestore } from "../../firebase";
+import { todayDate } from "../../helper/utility";
 export const transType = {
     INCOME:'income',
     EXPENSE:'expense'
 }
-const today = new Date().toISOString().slice(0, 10)
 
 const initailState = {
+  status:'idle',
   entities: [
     {
-      id: Date.now(),
+      id: Date.now().toString(),
       type: transType.INCOME,
-      date: today,
+      date: todayDate(),
       amount: 3000,
-      accountId: 0,
-      categoryId: 3,
+      accountId: 'cash',
+      categoryId: '3',
       notes: "",
       desc: "",
     },
@@ -21,16 +24,22 @@ const initailState = {
 
 export function transactionReducer(state = initailState, action) {
   switch (action.type) {
+    case "transaction/transactionLoaded": {
+      return {...state,entities:action.payload,status:'idle'};
+    }
+    case "transaction/transactionLoading": {
+      return {...state,status:'loading'};
+    }
     case "transaction/transactionAdded": {
-      return {...state,entities:[...state.entities,action.payload]};
+      return {...state,entities:[...state.entities,action.payload],status:'idle'};
     }
     case "transaction/transactionUpdate": {
       const updatedTransaction = action.payload
-      return {...state,entities:state.entities.map(item=>item.id===updatedTransaction.id?updatedTransaction:item)};
+      return {...state,status:'idle',entities:state.entities.map(item=>item.id===updatedTransaction.id?updatedTransaction:item)};
     }
     case "transaction/transactionDelete": {
       const deletedTransactionId = action.payload
-      return {...state,entities:state.entities.filter(item=>item.id!==deletedTransactionId)};
+      return {...state,status:'idle',entities:state.entities.filter(item=>item.id!==deletedTransactionId)};
     }
 
     default:{
@@ -41,6 +50,17 @@ export function transactionReducer(state = initailState, action) {
 
 
 // action creator
+export function transactionLoaded(transactions) {
+  return {
+    type: "transaction/transactionLoaded",
+    payload: transactions,
+  };
+}
+const transactionLoading = ()=>{
+  return {
+    type: "transaction/transactionLoading",
+  };
+}
 export  const transactionAdd = (data)=>{
     
     return{
@@ -49,7 +69,7 @@ export  const transactionAdd = (data)=>{
     }
 }
 
-export const trabsactionDelete =  (transactionId)=>{
+export const transactionDelete =  (transactionId)=>{
   return{
     type:'transaction/transactionDelete',
     payload:transactionId
@@ -66,5 +86,42 @@ export const transactionUpdate = (data)=>{
 // selectors
 export const fetchTransaction = (state)=>{
   return state.transactions.entities
+
+}
+
+// thunk function 
+
+export const fetchTransactionThunk = ()=> async (dispatch,getState)=>{
+    dispatch(transactionLoading())
+    const transactionCol = collection(firestore,'TRANSACTION');
+    const response = await getDocs(transactionCol);
+    const transactionList = response.docs.map(doc=>doc.data());
+    dispatch(transactionLoaded(transactionList))
+
+}
+
+export const addTransactionThunk = (data)=>async (dispatch,getState)=>{
+   dispatch(transactionLoading())
+    // const transactionCol = collection(firestore,'TRANSACTION');
+    // const response = await addDoc(transactionCol,data);
+    const transactionRef = doc(collection(firestore,'TRANSACTION'));
+    await setDoc(transactionRef, {...data,id:transactionRef.id});  
+  
+  
+  dispatch(transactionAdd({...data,id:transactionRef.id}))
+}
+
+export const updateTransactionThunk = (data)=>async (dispatch,getState)=>{
+    dispatch(transactionLoading())
+    const transactionRef = doc(collection(firestore,'TRANSACTION'),data.id);
+    const response = await updateDoc(transactionRef,data);
+    dispatch(transactionUpdate(data))
+}
+
+export const deleteTransactionThunk = (transactionId)=>async (dispatch,getState)=>{
+  dispatch(transactionLoading())
+  const transactionRef = doc(collection(firestore,'TRANSACTION'),transactionId);
+  await deleteDoc(transactionRef);
+  dispatch(transactionDelete(transactionId))
 
 }
