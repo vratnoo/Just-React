@@ -1,6 +1,7 @@
 import { transType } from "../transaction/transactionSlice"
 import { doc,getDocs,collection,setDoc,updateDoc,deleteDoc } from "firebase/firestore/lite"
 import { firestore } from "../../firebase"
+import axios from "axios"
 const initailState = {
     entities:[
         {id:'1',name:"Food",type:transType.EXPENSE},
@@ -79,12 +80,48 @@ export const fetchCategories = (state)=>{
 
 
 // thunks
+// export const fetchCategoriesThunk = ()=>{
+//     return async (dispatch)=>{
+//         dispatch(categoryLoading())
+//         const categoriesCol = collection(firestore,'CATEGORIES');
+//         const response = await getDocs(categoriesCol);
+//         const categories = response.docs.map(doc=>doc.data());
+//         dispatch(categoryLoaded(categories))
+//     }
+// }
+
+// export const addCategoryThunk = (category)=>{
+//     return async (dispatch)=>{
+//         dispatch(categoryLoading())
+//         const categoriesRef = doc(collection(firestore,'CATEGORIES'))
+//         await setDoc(categoriesRef,{...category,id:categoriesRef.id})
+//         dispatch(categoryAdd({...category,id:categoriesRef.id}))
+//     }
+// }
+
+// export const updateCategoryThunk = (category)=>{
+//     return async (dispatch)=>{
+//         dispatch(categoryLoading())
+//         const categoriesRef = doc(collection(firestore,'CATEGORIES'),category.id)
+//         await updateDoc(categoriesRef,category)
+//         dispatch(categoryUpdate(category))
+//     }
+// }
+
+// export const deleteCategoryThunk = (categoryId)=>{
+//     return async (dispatch)=>{
+//         dispatch(categoryLoading())
+//         const categoriesRef = doc(collection(firestore,'CATEGORIES'),categoryId)
+//         await deleteDoc(categoriesRef)
+//         dispatch(categoryDelete(categoryId))
+//     }
+// }
+
 export const fetchCategoriesThunk = ()=>{
     return async (dispatch)=>{
         dispatch(categoryLoading())
-        const categoriesCol = collection(firestore,'CATEGORIES');
-        const response = await getDocs(categoriesCol);
-        const categories = response.docs.map(doc=>doc.data());
+        const response = await axios.get('http://localhost:8080/categories')
+        const categories = response.data.map(item=>({id:item._id,...item}))
         dispatch(categoryLoaded(categories))
     }
 }
@@ -92,17 +129,15 @@ export const fetchCategoriesThunk = ()=>{
 export const addCategoryThunk = (category)=>{
     return async (dispatch)=>{
         dispatch(categoryLoading())
-        const categoriesRef = doc(collection(firestore,'CATEGORIES'))
-        await setDoc(categoriesRef,{...category,id:categoriesRef.id})
-        dispatch(categoryAdd({...category,id:categoriesRef.id}))
+        const response = await axios.post('http://localhost:8080/categories/new',category)
+        dispatch(categoryAdd({...category,id:response.data.id}))
     }
 }
 
 export const updateCategoryThunk = (category)=>{
     return async (dispatch)=>{
         dispatch(categoryLoading())
-        const categoriesRef = doc(collection(firestore,'CATEGORIES'),category.id)
-        await updateDoc(categoriesRef,category)
+        const response = await axios.put(`http://localhost:8080/categories/${category.id}`,category)
         dispatch(categoryUpdate(category))
     }
 }
@@ -110,8 +145,7 @@ export const updateCategoryThunk = (category)=>{
 export const deleteCategoryThunk = (categoryId)=>{
     return async (dispatch)=>{
         dispatch(categoryLoading())
-        const categoriesRef = doc(collection(firestore,'CATEGORIES'),categoryId)
-        await deleteDoc(categoriesRef)
+        const response = await axios.delete(`http://localhost:8080/categories/${categoryId}`)
         dispatch(categoryDelete(categoryId))
     }
 }

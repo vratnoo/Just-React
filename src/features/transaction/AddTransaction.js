@@ -50,8 +50,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
         let value=  e.target.value
         if(name=="account"){
             name = "accountId"
-            value = parseInt(value)
-            console.log(value)
+          
         }
 
         if(name=='amount'){
