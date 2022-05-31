@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Loader } from './component/loader';
+import Loader from './component/loader';
 import {
   fetchCategories,
   categoryAdd,

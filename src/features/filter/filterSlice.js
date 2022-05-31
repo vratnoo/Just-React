@@ -1,6 +1,7 @@
 const todayMonth = new Date(2022,4,20); 
 const initailState = {
-    month:todayMonth
+    month:todayMonth,
+    search:'',
 }
 
 
@@ -15,6 +16,9 @@ export const filterReducer = (state=initailState,action)=>{
             const decreasedDate = state ? new Date(state.month.getFullYear(),state.month.getMonth()-1) : todayMonth;
             return {...state,month:decreasedDate}
         }
+        case 'filters/search':{
+            return {...state,search:action.payload}
+        }
             
             
     
@@ -28,6 +32,7 @@ export const filterReducer = (state=initailState,action)=>{
 // selector
 
 export const fetchFilterMonth = (state)=>state.filters.month
+export const fetchSearchFilter = (state)=>state.filters.search
 
 // action creator
 export const currentMonthIncrease = ()=>{
@@ -42,4 +47,10 @@ export const currentMonthDecrease = ()=>{
     }
 }
 
+export const searchFilter = (search)=>{
+    return{
+        type:'filters/search',
+        payload:search
+    }
+}
 

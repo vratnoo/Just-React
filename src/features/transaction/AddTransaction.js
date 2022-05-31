@@ -11,6 +11,12 @@ import {
 } from "./transactionSlice";
 import { fetchCategories } from '../categories/categorySlice';
 import { getDate,isValidDate,todayDate } from '../../helper/utility';
+import { Transition } from 'react-transition-group';
+import { async } from '@firebase/util';
+import "./animation.css"
+import { CSSTransition } from 'react-transition-group';
+
+
 
 const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setEditId,addTransaction,updateTransaction})=>{
     const navigate = useNavigate()
@@ -41,6 +47,12 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
                 setEditId(null)
             }
         
+            return async()=>{
+                console.log("Component unmounted")
+                await setTimeout(()=>{
+                    console.log("will unmount in 1 sec")
+                },1000)
+            }
         
 
     },[editId])
@@ -153,5 +165,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
         </div>
     )
 }
+
+
 
 export default AddTransaction;

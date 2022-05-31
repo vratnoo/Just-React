@@ -3,19 +3,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../categories/categorySlice';
 import {fetchTransaction, fetchTransactionThunk} from './transactionSlice'
 import { transType, deleteTransactionThunk } from './transactionSlice';
-import FilterSection from '../filter/filterSection';
-import { fetchFilterMonth } from '../filter/filterSlice';
+    import { fetchFilterMonth, fetchSearchFilter } from '../filter/filterSlice';
 import { getDay,isValidDate } from '../../helper/utility';
+import Filters from '../filter/filterSection';
 const ShowTransaction = ({accounts,handleEdit})=>{
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
     const filterMonth = useSelector(fetchFilterMonth)
+    const searchFilter = useSelector(fetchSearchFilter)
     const loadingStatus = useSelector(state=>state.transactions.status)
     console.log("check data",transactions)
     const filterdTransaction = transactions.filter((item)=>{
         const date = new Date(item.date)
         console.log("item date === filter date",item.date,filterMonth)
-        return date.getMonth() === filterMonth.getMonth()
+        const searchResult = item.notes.search(searchFilter)
+        console.log(item.notes,searchFilter,searchResult)
+        return (date.getMonth() === filterMonth.getMonth()) && (searchResult !== -1)
     })
     const dispatch = useDispatch()
 
@@ -65,7 +68,7 @@ const ShowTransaction = ({accounts,handleEdit})=>{
     return(
         <div>
             {(loadingStatus==='loading')?loader:null}
-            <FilterSection/>
+            <Filters/>
             <h2>View Transaction</h2>
             <div className='meter'>
                 <div className="income">

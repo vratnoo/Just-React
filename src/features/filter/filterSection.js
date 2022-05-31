@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchFilterMonth,currentMonthIncrease,currentMonthDecrease } from './filterSlice'
-const FilterSection = () => {
+import { fetchFilterMonth,currentMonthIncrease,currentMonthDecrease, fetchSearchFilter, searchFilter } from './filterSlice'
+const MonthFilter = () => {
     const dispatch = useDispatch()
     const filterMonth = useSelector(fetchFilterMonth)
     
@@ -28,4 +28,35 @@ const FilterSection = () => {
   )
 }
 
-export default FilterSection
+
+const SearchFilter = ()=>{
+    const dispatch = useDispatch()
+    const SearchString = useSelector(fetchSearchFilter)
+    const handleChange = (e)=>{
+        const value  = e.target.value
+        if(value!==""){
+            dispatch(searchFilter(value))
+        }else{
+            dispatch(searchFilter(value))
+        }
+            
+    }
+
+    return(
+        <div className='searchFilter'>
+            <input type="text"  placeholder='search' name="search" onChange={handleChange} value={SearchString}/>
+            <button name='reset' onClick={()=>dispatch(searchFilter(""))}>Reset</button>
+        </div>
+    )
+}
+
+const Filters = ()=>{
+    return(
+        <>
+        <MonthFilter/>
+        <SearchFilter/>
+        </>
+    )
+}
+
+export default Filters

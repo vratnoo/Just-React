@@ -1,10 +1,10 @@
 import React from 'react'
 
-export const Loader = (props) => {
+const Loader = (props) => {
 
     if(props.loadingStatus==='loading'){
         return (
-            <div className='loader'><div class="lds-ripple"><div></div><div></div></div></div>
+            <div className='loader'><div className="lds-ripple"><div></div><div></div></div></div>
                )
     }else{
         return null
@@ -12,5 +12,6 @@ export const Loader = (props) => {
 
 }
 
+export default Loader
 
  

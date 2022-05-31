@@ -1,0 +1,24 @@
+/*****Fade In effect when component is mounted*****/
+//This is when your animation starts
+fade-enter {
+  opacity: 0;
+}
+
+//When your animation is active
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: all 500ms ease-in;
+}
+/*****Fade In effect when component is mounted*****/
+
+
+/*****Fade Out effect when component is unmounted*****/
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: all 500ms ease-out;
+}
+
+/*****Fade Out effect when component is unmounted*****/

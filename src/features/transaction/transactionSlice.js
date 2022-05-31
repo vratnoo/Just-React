@@ -104,7 +104,11 @@ export const fetchTransaction = (state)=>{
 export const fetchTransactionThunk = ()=> async (dispatch,getState)=>{
   dispatch(transactionLoading())
   const response = await axios.get('http://localhost:8080/transaction')
-  const transactionList = response.data.map(item=>({...item,id:item._id,}));
+  const transactionList = response.data.map(item=>{
+    const id = item._id
+    delete item._id
+    return ({id,...item})
+  });
   console.log("transactions is herer",transactionList)
   dispatch(transactionLoaded(transactionList))
 

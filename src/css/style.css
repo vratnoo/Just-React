@@ -87,7 +87,9 @@ h2 {
 }
 
 .container {
-  max-width: 800px;
+  width: 800px;
+}
+.container > div {
   margin: 0 auto;
 }
 
@@ -190,6 +192,51 @@ table th, table td {
 .meter h1 {
   font-size: 2rem;
   font-weight: 600;
+}
+
+.main {
+  display: flex;
+  width: 1400px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  width: 300px;
+  background-color: #f3f3f3;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar li {
+  padding: 0.5rem;
+  font-size: 1.23rem;
+}
+.sidebar li:hover {
+  color: #645e5e;
+}
+.sidebar li:first-child {
+  border-top: 1px solid #f3f3f3;
+  background-color: #314bc9;
+  color: white;
+}
+
+.searchFilter {
+  display: flex;
+}
+.searchFilter input {
+  width: 100%;
+  padding: 1rem 0.5rem;
+  background-color: #def0de;
+  border: 1px solid #7c8e7c;
+}
+.searchFilter button {
+  background-color: #068e06;
+  color: white;
+  padding: 0.5rem 1rem;
+}
+.searchFilter button:active {
+  background-color: #645e5e;
 }
 
 .top-filter {

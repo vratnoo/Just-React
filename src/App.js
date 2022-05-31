@@ -6,23 +6,26 @@ import  ShowTransaction from "./features/transaction/ShowTransaction"
 import  TransactionChart from "./features/stats/Stats"
 import Navigation from './component/Navigation'
 import Category from "./categories"
-import FilterSection from './features/filter/filterSection'
 import { useDispatch } from 'react-redux'
 import {
   Routes,
   Route,
   useNavigate,
 } from "react-router-dom";
+import LoginPage from './component/Login'
+import useToken from './component/useToken'
+
 
 function App() {
     const accounts = [{id:'cash',name:"CASH"},{id:'online',name:"ONLINE"}]
     const [editId,setEditId] = useState(null)
     const navigate = useNavigate()
     const dispatch = useDispatch()
- 
+    const {token,setToken} = useToken()
+    const [showAddTransaction,setShowAddTransaction] = useState(false)
 
   useEffect(()=>{
-    console.log("edit mode is: "+editId)
+    console.log("token is here",token)
     if(editId===null){
       dispatch(fetchTransactionThunk())
       dispatch(fetchCategoriesThunk())
@@ -34,7 +37,7 @@ function App() {
   
   const handleEdit = (id)=>{
     setEditId(id)
-    navigate("/",{state:{updateMode:false}})
+    navigate("/")
   }
    
 
@@ -42,12 +45,16 @@ function App() {
     
 
   
-  const AddProps = {setEditId,accounts,editId}
+  const AddProps = {setEditId,accounts,editId,showAddTransaction,setShowAddTransaction}
   const ShowProps = {setEditId,accounts,handleEdit}
+
+  if(!token || token===null){
+    return <LoginPage setToken={setToken}/>
+  }
   return (
     <>
-
-      <Navigation setEditId={setEditId}/>
+      <div className='main'>
+      <Navigation setToken={setToken} token={token} setEditId={setEditId}/>
       <div className='container'>
       <Routes>
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
@@ -55,6 +62,7 @@ function App() {
         <Route path="/categories" element={ <Category />} />
         <Route path="/stats" element={ <TransactionChart/>} />
     </Routes>
+      </div>
       </div>
       
 
