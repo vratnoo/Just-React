@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import Loader from './loader'
 
 const LoginPage = ({setToken}) => {
-    const [credentail,setCredentail] = useState({username:"",password:""})
+    const [credentail,setCredentail] = useState({username:"vratnoo",password:"123"})
     const [loadStatus,setLoadStatus] = useState('idle')
     const navigate = useNavigate()
     const handleChange  = (e)=>{
