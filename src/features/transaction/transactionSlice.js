@@ -1,5 +1,3 @@
-import { collection, addDoc, doc,getDocs,setDoc,deleteDoc,updateDoc } from "firebase/firestore/lite";
-import { firestore } from "../../firebase";
 import { todayDate } from "../../helper/utility";
 import axios from "axios";
 export const transType = {
@@ -90,16 +88,7 @@ export const fetchTransaction = (state)=>{
 
 }
 
-// thunk function 
 
-// export const fetchTransactionThunk = ()=> async (dispatch,getState)=>{
-//     dispatch(transactionLoading())
-//     const transactionCol = collection(firestore,'TRANSACTION');
-//     const response = await getDocs(transactionCol);
-//     const transactionList = response.docs.map(doc=>doc.data());
-//     dispatch(transactionLoaded(transactionList))
-
-// }
 
 export const fetchTransactionThunk = ()=> async (dispatch,getState)=>{
   dispatch(transactionLoading())
@@ -114,16 +103,6 @@ export const fetchTransactionThunk = ()=> async (dispatch,getState)=>{
 
 }
 
-// export const addTransactionThunk = (data)=>async (dispatch,getState)=>{
-//    dispatch(transactionLoading())
-//     // const transactionCol = collection(firestore,'TRANSACTION');
-//     // const response = await addDoc(transactionCol,data);
-//     const transactionRef = doc(collection(firestore,'TRANSACTION'));
-//     await setDoc(transactionRef, {...data,id:transactionRef.id});  
-  
-  
-//   dispatch(transactionAdd({...data,id:transactionRef.id}))
-// }
 
 export const addTransactionThunk = (data)=>async (dispatch,getState)=>{
   dispatch(transactionLoading())
@@ -134,12 +113,7 @@ export const addTransactionThunk = (data)=>async (dispatch,getState)=>{
  
 }
 
-// export const updateTransactionThunk = (data)=>async (dispatch,getState)=>{
-//     dispatch(transactionLoading())
-//     const transactionRef = doc(collection(firestore,'TRANSACTION'),data.id);
-//     const response = await updateDoc(transactionRef,data);
-//     dispatch(transactionUpdate(data))
-// }
+
 
 export const updateTransactionThunk = (data)=>async (dispatch,getState)=>{
   dispatch(transactionLoading())
@@ -147,13 +121,7 @@ export const updateTransactionThunk = (data)=>async (dispatch,getState)=>{
   dispatch(transactionUpdate(data))
 }
 
-// export const deleteTransactionThunk = (transactionId)=>async (dispatch,getState)=>{
-//   dispatch(transactionLoading())
-//   const transactionRef = doc(collection(firestore,'TRANSACTION'),transactionId);
-//   await deleteDoc(transactionRef);
-//   dispatch(transactionDelete(transactionId))
 
-// }
 export const deleteTransactionThunk = (transactionId)=>async (dispatch,getState)=>{
   dispatch(transactionLoading())
   const response = await axios.delete(`http://localhost:8080/transaction/${transactionId}`)
