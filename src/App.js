@@ -7,6 +7,7 @@ import  TransactionChart from "./features/stats/Stats"
 import Navigation from './component/Navigation'
 import Category from "./categories"
 import FilterSection from './features/filter/filterSection'
+import Test from './features/test/Test'
 import { useDispatch } from 'react-redux'
 import {
   Routes,
@@ -51,6 +52,7 @@ function App() {
       <div className='container'>
       <Routes>
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
+        <Route path="/test" element={ <Test/>} />
         <Route path="/show" element={ <ShowTransaction  {...ShowProps} />} />
         <Route path="/categories" element={ <Category />} />
         <Route path="/stats" element={ <TransactionChart/>} />
