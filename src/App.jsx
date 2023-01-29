@@ -5,7 +5,7 @@ import  AddTransaction from "./features/transaction/AddTransaction"
 import  ShowTransaction from "./features/transaction/ShowTransaction"
 import  TransactionChart from "./features/stats/Stats"
 import Navigation from './component/Navigation'
-import Category from "./categories"
+import Category from "./features/categories/categories"
 import FilterSection from './features/filter/filterSection'
 import Test from './features/test/Test'
 import { useDispatch } from 'react-redux'
@@ -14,6 +14,8 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
+import Header from './layout/Header'
+import Aside from './layout/Aside'
 
 function App() {
     const accounts = [{id:'cash',name:"CASH"},{id:'online',name:"ONLINE"}]
@@ -47,9 +49,14 @@ function App() {
   const ShowProps = {setEditId,accounts,handleEdit}
   return (
     <>
-
-      <Navigation setEditId={setEditId}/>
-      <div className='container'>
+      <Header>
+        
+        <Navigation setEditId={setEditId}/>
+      </Header>
+      <div className='flex container mx-auto'>
+        <Aside/>
+        <main className='w-full px-5'>
+          <div className='container'>
       <Routes>
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
         <Route path="/test" element={ <Test/>} />
@@ -58,6 +65,12 @@ function App() {
         <Route path="/stats" element={ <TransactionChart/>} />
     </Routes>
       </div>
+        </main>
+        
+
+      </div>      
+
+      
       
 
      

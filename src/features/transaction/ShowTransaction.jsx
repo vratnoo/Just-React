@@ -63,34 +63,40 @@ const ShowTransaction = ({accounts,handleEdit})=>{
     },[])
     const loader = <div className='loader'><div class="lds-ripple"><div></div><div></div></div></div>
     return(
-        <div>
+        <div className='p-4 flex flex-col'>
             {(loadingStatus==='loading')?loader:null}
+            <div className="flex justify-between items-center">
+            <h2 className='text-gray-500 text-2xl font-bold'>Transactions</h2>
             <FilterSection/>
-            <h2>View Transaction</h2>
-            <div className='meter'>
-                <div className="income">
+            </div>
+
+            <div className='flex items-center justify-between w-full max-w-2xl mx-auto py-6 text-2xl font-extrabold'>
+                <div className="text-green-700 flex flex-col items-center">
+                     <p className='text-sm text-slate-400'>INCOME</p>
                      <h1>{totalIncome}</h1>
                 </div>
-                <div className="expense">
+                <div className="text-red-700  flex flex-col items-center">
+                    <p className='text-sm text-slate-400'>EXPANSE</p>
                     <h1>{totalExpense}</h1>
                 </div>
-                <div className="net-income">
+                <div className="text-indigo-800 flex flex-col items-center">
+                    <p className='text-sm text-slate-400'>NET</p>
                     <h1>{totalIncome-totalExpense}</h1>
                 </div>
             </div>
             <table>
-                <thead>
+                <thead className='text-sm uppercase text-gray-700 bg-gray-50'>
                     <tr>
-                        <th>id</th>
-                        <th>Type</th>
-                        <th>Account</th>
-                        <th>Amount</th>
-                        <th>Category</th>
-                        <th>Notes</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th  className='py-2 px-3'>id</th>
+                        <th className='py-2 px-3'>Type</th>
+                        <th className='py-2 px-3'>Account</th>
+                        <th className='py-2 px-3'>Amount</th>
+                        <th className='py-2 px-3'>Category</th>
+                        <th className='py-2 px-3'>Notes</th>
+                        <th className='py-2 px-3'>Description</th>
+                        <th className='py-2 px-3'>Date</th>
+                        <th className='py-2 px-3'>Edit</th>
+                        <th className='py-2 px-3'>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,28 +105,32 @@ const ShowTransaction = ({accounts,handleEdit})=>{
                        let groupExpense = 0;
                        return(
                            <>
-                           <tr className='Trans_group'>
-                               <td colSpan={4} className="date">{getDay(transaction_item)}</td>
-                               <td colSpan={2} className='income'>{TranData[transaction_item].income}</td>
-                               <td colSpan={2} className='expense'>{TranData[transaction_item].expense}</td>
-                               <td colSpan={2} className='net-income'>{TranData[transaction_item].income-TranData[transaction_item].expense}</td>
+                           <tr className='bg-white  text-lg text-center border-t-2 border-t-gray-300 rounded-md text-gray-900 font-semibold '>
+                               <td colSpan={4} className="py-3">{getDay(transaction_item)}</td>
+                               <td colSpan={2} className='text-green-700 py-3'>{TranData[transaction_item].income}</td>
+                               <td colSpan={2} className='text-red-700 py-3' >{TranData[transaction_item].expense}</td>
+                               <td colSpan={2} className='text-sky-700 py-3'>{TranData[transaction_item].income-TranData[transaction_item].expense}</td>
                                
                           </tr>
 
                             {TranData[transaction_item].Data.map((item)=>(
-                                <tr className={item.type==transType.INCOME?"income":"expense"}>
-                                <td>{item.id}</td>
-                                <td>{item.type==transType.EXPENSE?"Expense":"Income"}</td>
-                                <td>{accounts.map((account)=>(account.id===item.accountId)?account.name:"")}</td>
-                                <td>{item.amount}</td>
-                                <td>{categories.map((category)=>(category.id===item.categoryId)?category.name:"")}</td>
+                                <tr className={"bg-gray-50"}>
+                                <td className='px-6 py-3'>{item.id}</td>
+                                <td className='px-6 py-3'>{item.type==transType.EXPENSE?(
+                                    <span className='px-3 mr-2 bg-red-200 flex items-center justify-center text-red-700 rounded-md font-bold'>Expanse</span>
+                                ):(
+                                    <span className='px-3 mr-2 bg-green-200  flex items-center justify-center text-green-700 rounded-md font-bold'>Income</span>                                    
+                                )}</td>
+                                <td className='px-6 py-3'>{accounts.map((account)=>(account.id===item.accountId)?account.name:"")}</td>
+                                <td className='px-6 py-3'>₹ {item.amount}</td>
+                                <td className='px-6 py-3'>{categories.map((category)=>(category.id===item.categoryId)?category.name:"")}</td>
                                 {console.log(typeof item.categoryId)}
                                 {/* <td>{`${item.categoryId}+${categories}`}</td> */}
-                                <td>{item.notes}</td>
-                                <td>{item.desc}</td>
-                                <td>{getDay(item.date)}</td>
-                                <td><button key={item.id} name="edit" onClick={()=>handleEdit(item.id)}>Edit</button></td>
-                                <td><button key={item.id} name="delete" onClick={()=>handleDelete(item.id)}>Delete</button></td>
+                                <td className='px-6 py-3'>{item.notes}</td>
+                                <td className='px-6 py-3'>{item.desc}</td>
+                                <td className='px-6 py-3'>{getDay(item.date)}</td>
+                                <td className='px-6 py-3'><button  className="text-indigo-700 font-medium" key={item.id} name="edit" onClick={()=>handleEdit(item.id)}>Edit</button></td>
+                                <td className='px-6 py-3'><button className="text-yellow-700 font-medium" key={item.id} name="delete" onClick={()=>handleDelete(item.id)}>Delete</button></td>
                                 
                                 </tr>
                             ))}
@@ -128,9 +138,9 @@ const ShowTransaction = ({accounts,handleEdit})=>{
                        )
 
                    })}
-                    <tr>
-                        <td colSpan={3}>Total</td>
-                        <td>{totalIncome-totalExpense}</td>
+                    <tr className='text-lg  text-gray-900 font-semibold'>
+                        <td colSpan={3} className="text-right">TOTAL</td>
+                        <td className="text-left bg-gray-50 flex items-center justify-center">₹{totalIncome-totalExpense}</td>
                         <td colSpan={6}></td>
                     </tr>
                      
