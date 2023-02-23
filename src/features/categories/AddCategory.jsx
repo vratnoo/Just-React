@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCategories,
@@ -12,33 +12,27 @@ import {
 import {transType} from '../transaction/transactionSlice'
 import classNames from 'classnames';
 import * as Dialog from '@radix-ui/react-dialog';
+import {DialogTrigger}from '@radix-ui/react-dialog';
 
-const DialogDemo = () => (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className="Button violet" size="large">
-          Edit profile
+const DialogDemo = ({children,isEdit,isOpen,setIsOpen }) => {
+
+
+
+return (
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+     <DialogTrigger  asChild>
+        <button className="bg-gray-600 text-white py-1 px-3" size="large">
+          Add Category
         </button>
-      </Dialog.Trigger>
+      </DialogTrigger>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
-        <Dialog.Content className="DialogContent">
-          <Dialog.Title className="DialogTitle">Edit profile</Dialog.Title>
+        <Dialog.Content className="DialogContent ">
+          <Dialog.Title className="DialogTitle">{(isEdit)?"Edit Category":"Add Category"}</Dialog.Title>
           <Dialog.Description className="DialogDescription">
             Make changes to your profile here. Click save when you're done.
           </Dialog.Description>
-          <fieldset className="Fieldset">
-            <label className="Label" htmlFor="name">
-              Name
-            </label>
-            <input className="Input" id="name" defaultValue="Pedro Duarte" />
-          </fieldset>
-          <fieldset className="Fieldset">
-            <label className="Label" htmlFor="username">
-              Username
-            </label>
-            <input className="Input" id="username" defaultValue="@peduarte" />
-          </fieldset>
+          {children}
           <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
             <Dialog.Close asChild>
               <button className="Button green">Save changes</button>
@@ -53,14 +47,15 @@ const DialogDemo = () => (
       </Dialog.Portal>
     </Dialog.Root>
   );
-  
+}
 
-const AddCategory = ({addCategory,isEdit,setIsEdit,currentCategory,transactionType,updateCategory}) => {
+const AddCategory = ({isEdit,setIsEdit,currentCategory,open,handleOpen}) => {
     const initialState = {id:"",name:"",type:transType.EXPENSE}
     const categories  = useSelector(fetchCategories)
-    
     const [category,setCategory] = useState({})
+    // const [open,setOpen] = useState(false)
     const dispatch = useDispatch()
+    
     useEffect(()=>{
        
         if(isEdit && currentCategory!==""){
@@ -78,34 +73,46 @@ const AddCategory = ({addCategory,isEdit,setIsEdit,currentCategory,transactionTy
     const handleSubmit = (e)=>{
         e.preventDefault()
         if(isEdit && currentCategory!==""){
-            // updateCategory(category)
             dispatch(updateCategoryThunk(category))
-            // dispatch(categoryUpdate(category))
             setIsEdit(false)
             setCategory(initialState)
         }else{
             // addCategory({...category,id:Date.now()})
+            console.log("added transaction")
             dispatch(addCategoryThunk(category))
             // dispatch(categoryAdd({...category,id:Date.now()}))
             setCategory(initialState)
         }
+        handleOpen(false)
 
     }
         
-    return ( <div>
-       <DialogDemo/>
-        <h2>{!isEdit?"Add Category":"Edit Category"}</h2>
-        <p>id: {category.id}</p>
-            <form onSubmit={handleSubmit}>
-                <label> Name </label>
-                <input type="text" name="name" value={category.name} onChange={handleChange}/>
-                <label> Type </label>
-                <select name="type" value={category.type} onChange={handleChange}>
+    return ( 
+      <>
+       
+
+       <DialogDemo isEdit={isEdit} isOpen={open} setIsOpen={handleOpen}>
+    <div>
+        {isEdit &&(<p>id: {category.id}</p>)}
+            <form  onSubmit={handleSubmit} className="flex flex-col space-y-2">
+              <div className='flex  items-center'>
+                <label className='text-lg font-medium w-1/5'> Name </label>
+                <input className='border border-gray-500 w-4/5 rounded-md py-1 px-3' type="text" name="name" value={category.name} onChange={handleChange}/>
+              </div>
+              <div className='flex  items-center'>
+              <label className='text-lg font-medium w-1/5'> Type </label>
+                <select  className='w-4/5 border border-gray-500 rounded-md py-1 px-3' name="type" value={category.type} onChange={handleChange}>
                 {Object.keys(transType).map((key,index)=><option value={transType[key]}>{key}</option>)}
                 </select>
-                <button>{!isEdit?"SAVE":"UPDATE"}</button>
+              </div>
+              
+                <button  className='bg-gray-800 text-white py-2 px-3 rounded-md hover:bg-gray-700'>{!isEdit?"SAVE":"UPDATE"}</button>
+
             </form>
-    </div> );
+    </div> 
+        </DialogDemo>
+      </>
+    );
 }
 
 export default AddCategory

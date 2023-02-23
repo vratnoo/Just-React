@@ -2,15 +2,26 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../categories/categorySlice';
 import {fetchTransaction, fetchTransactionThunk} from './transactionSlice'
-import { transType, deleteTransactionThunk } from './transactionSlice';
+import { transType,accounts, deleteTransactionThunk } from './transactionSlice';
 import FilterSection from '../filter/filterSection';
 import { fetchFilterMonth } from '../filter/filterSlice';
 import { getDay,isValidDate } from '../../helper/utility';
-const ShowTransaction = ({accounts,handleEdit})=>{
+import { PlusCircleIcon,XMarkIcon } from '@heroicons/react/24/solid'
+import * as Dialog from '@radix-ui/react-dialog';
+import {DialogTrigger}from '@radix-ui/react-dialog';
+import AddTransaction from './AddTransaction';
+import { useState } from 'react';
+
+const ShowTransaction = ()=>{
     const transactions = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
     const filterMonth = useSelector(fetchFilterMonth)
     const loadingStatus = useSelector(state=>state.transactions.status)
+    const [open,setIsOpen] = useState(false)
+    const [editId,setEditId] = useState(undefined)
+
+
+
     console.log("check data",transactions)
     const filterdTransaction = transactions.filter((item)=>{
         const date = new Date(item.date)
@@ -61,9 +72,23 @@ const ShowTransaction = ({accounts,handleEdit})=>{
     useEffect(()=>{
         // dispatch(fetchTransactionThunk())
     },[])
-    const loader = <div className='loader'><div class="lds-ripple"><div></div><div></div></div></div>
+
+    const handleEdit = (id)=>{
+        setEditId(id)
+        setIsOpen(true)
+    }
+
+
+
+    const loader = <div className='loader'><div className="lds-ripple"><div></div><div></div></div></div>
     return(
         <div className='p-4 flex flex-col'>
+            <div className="fixed  z-[100] bottom-8 flex items-center justify-center">
+                    <button onClick={()=>setIsOpen(true)} className='flex items-center bg-gray-900 text-white font-medium py-1  px-5 rounded-full hover:bg-gray-700'>
+                    <PlusCircleIcon className="h-8 w-8 mr-2" />
+                        Add New</button>
+            </div>
+            <AddTransactionModel open={open} setIsOpen={setIsOpen}  editId={editId}/>
             {(loadingStatus==='loading')?loader:null}
             <div className="flex justify-between items-center">
             <h2 className='text-gray-500 text-2xl font-bold'>Transactions</h2>
@@ -152,5 +177,44 @@ const ShowTransaction = ({accounts,handleEdit})=>{
         </div>
     )
 }
+
+
+const DialogDemo = ({children,isEdit,isOpen,setIsOpen }) => {
+
+
+
+return (
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="DialogOverlay" />
+        <Dialog.Content className="DialogContent max-w-3xl">
+          {children}
+          <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
+            <Dialog.Close asChild>
+              <button className="Button green">Save changes</button>
+            </Dialog.Close>
+          </div>
+          <Dialog.Close asChild>
+            <button className="IconButton" aria-label="Close">
+              <XMarkIcon/>
+            </button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function AddTransactionModel({open,setIsOpen,editId}) {
+  
+    return (  
+        <DialogDemo isOpen={open} setIsOpen={setIsOpen} >
+            <AddTransaction editId={editId} setIsOpen={setIsOpen}/>
+        </DialogDemo>
+    );
+}
+
+
+
 
 export default ShowTransaction;

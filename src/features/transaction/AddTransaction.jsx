@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   transactionAdd,
   transType,
+  accounts,
   fetchTransaction,
   transactionUpdate,
   addTransactionThunk,
@@ -13,26 +14,29 @@ import { fetchCategories } from '../categories/categorySlice';
 import { getDate,isValidDate,todayDate } from '../../helper/utility';
 import classNames from 'classnames';
 
-const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setEditId,addTransaction,updateTransaction})=>{
+const AddTransaction = (props)=>{
+    const {editId,setEditId,setIsOpen} = props
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const allTransaction = useSelector(state=>state.transactions.entities)
-    const transactions = useSelector(fetchTransaction)
+    const transactionList = useSelector(fetchTransaction)
     const categories = useSelector(fetchCategories)
     const loadingStatus = useSelector(state=>state.transactions.status)
     const [type,setType] = useState(transType.INCOME)
     
     const initialState = {type:type,date:todayDate(),amount:0,accountId:'cash',categoryId:'0',notes:"",desc:""}
     const [transaction,setTransaction] = useState(initialState)
-    const transactionList  = transactions
 
-    console.log("transactionList here: ",allTransaction)
+    // console.log("transactionList here: ",allTransaction)
     useEffect(()=>{
-      
+
+        console.log("props",props)
+        if(editId){
+
             if(editId!==null){
-                console.log(transactionList)
+                // console.log(transactionList)
                 const currentTransaction = transactionList.find((item)=>item.id==editId)
-                console.log(currentTransaction)
+                // console.log(currentTransaction)
                 setTransaction(currentTransaction)
                 setType(currentTransaction.type)
             }else{
@@ -42,6 +46,9 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
                 setEditId(null)
             }
         
+
+        }
+            
         
 
     },[editId])
@@ -62,7 +69,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
             name = "categoryId"
         }
         if(name=="date"){
-            console.log("invalid date si ",value)
+            // console.log("invalid date si ",value)
             if(isValidDate(value)){
                 value = new Date(value).toISOString().slice(0, 10)
             }else{
@@ -70,7 +77,7 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
             }
         }
         setTransaction({...transaction,[name]:value})
-        console.log(transaction)
+        // console.log(transaction)
         
         
     }
@@ -78,14 +85,15 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
     const handleSubmit = (e)=>{
         e.preventDefault()
         // setTransaction({...transaction,id:Date.now()})
-        console.log('added/updated transaction',transaction)
-        if(editId!==null){
+        // console.log('added/updated transaction',transaction)
+        if(editId && editId!==null){
             dispatch(updateTransactionThunk(transaction))  
-            navigate('/show')
+            setIsOpen((oldState)=>false)
 
             // updateTransaction({...transaction,type:type})  
         }else{
             dispatch(addTransactionThunk(transaction))
+            setIsOpen((oldState)=>false)
             // addTransaction({...transaction,id:Date.now(),type:type})
         }
         setTransaction(initialState)
@@ -109,14 +117,14 @@ const AddTransaction = ({transactionType,accounts,setTransactionList,editId,setE
 
         <div className="w-full p-5">
             {loadingStatus=='loading'?loader:''}
-            <div className="flex justify-between">
-                <h2 className='text-2xl text-gray-700 font-bold'>{editId!==null?("Edit Transaction"):"Add Transaction"}</h2>
+            <div className="flex flex-col justify-center items-center sm:justify-between sm:flex-row">
+                <h2 className='text-2xl text-gray-700 font-bold'>{editId && editId!==null?("Edit Transaction"):"Add Transaction"}</h2>
                 
             <TabComponent first="income" second="expanse" initState={type==transType.INCOME?true:false} onClick={handleClick}/>
             </div>
             <form className="mx-auto max-w-2xl" onSubmit={handleSubmit}>
                 <div className="flex flex-col  py-4 px-5">
-                     <div className="w-full flex justify-between py-2">
+                     <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between py-2">
                         <div className='flex gap-1 items-center'>
                             <label className='text-md w-36 font-medium text-gray-600'>Date</label>
                             <input className="border border-gray-300 rounded-md px-3 min-w-xl py-1" type="date" name="date"  value={getDate(transaction.date)} onChange={handleChange}/>

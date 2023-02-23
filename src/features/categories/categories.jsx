@@ -58,23 +58,34 @@ const Category = (props) => {
     const [isEdit,setIsEdit] = useState(false)
     const [currentCategory,setCurrentCategory] = useState("")
     const loadingStatus = useSelector(state=>state.categories.status)
+    const [open,setOpen] = useState(false)
 
     const handleEdit = (id)=>{
         setIsEdit(true)
         setCurrentCategory(id)
+        setOpen(true)
     }
-
+    const handleOpen = (isOpen)=>{
+        if(!isOpen){
+            setIsEdit(false)
+            setCurrentCategory("")
+        }
+        
+        setOpen(isOpen)
+    }
 
     useEffect(()=>{
         console.log(categories)
     },[categories])
-    const ExtraProps = {...props,isEdit,setIsEdit,handleEdit,currentCategory}
+    const ExtraProps = {...props,isEdit,setIsEdit,handleEdit,currentCategory,open,handleOpen}
     return (
         <div className='px-4 py-4'>
             <Loader loadingStatus={loadingStatus} />
-            <div className='flex justify-end'><button className='bg-slate-800 text-white px-3 py-0 rounded-md hover:bg-slate-500'>Add New</button></div>
-            <ViewCategory {...ExtraProps}/>
+            <div className='flex justify-end'>
             <AddCategory {...ExtraProps}/>
+            </div>
+
+            <ViewCategory {...ExtraProps}/>
         </div>
       );
 }

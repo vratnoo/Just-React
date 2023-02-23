@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { AcademicCapIcon,SunIcon } from '@heroicons/react/24/solid'
 
 const Navigation = (props)=>{
@@ -19,11 +19,11 @@ const Navigation = (props)=>{
             <ul className='hidden md:flex items-center justify-around  gap-5 text-sm font-medium text-slate-400 '>
 
                 <li className="hover:text-slate-900"> 
-                    <Link   to="/" state={{updateMode:false}} onClick={handleClick}>Add</Link>
+                    <NavLink exact  activeClassName="active"  to="/" state={{updateMode:false}} onClick={handleClick}>Add</NavLink>
                 </li>
-                <li className="hover:text-slate-900"> <Link  to="/show" >Show</Link></li>
-                <li className="hover:text-slate-900"> <Link  to="/categories" >Categories</Link></li>
-                <li className="hover:text-slate-900"> <Link  to="/stats" >Stats</Link></li>
+                <li className="hover:text-slate-900"> <NavLink activeClassName="active"to="/show" >Show</NavLink></li>
+                <li className="hover:text-slate-900"> <NavLink activeClassName="active" to="/categories" >Categories</NavLink></li>
+                <li className="hover:text-slate-900"> <NavLink  activeClassName="active" to="/stats" >Stats</NavLink></li>
               
             </ul>
             </nav>

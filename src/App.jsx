@@ -18,7 +18,7 @@ import Header from './layout/Header'
 import Aside from './layout/Aside'
 
 function App() {
-    const accounts = [{id:'cash',name:"CASH"},{id:'online',name:"ONLINE"}]
+    
     const [editId,setEditId] = useState(null)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -45,8 +45,8 @@ function App() {
     
 
   
-  const AddProps = {setEditId,accounts,editId}
-  const ShowProps = {setEditId,accounts,handleEdit}
+  const AddProps = {setEditId,editId}
+  const ShowProps = {setEditId,handleEdit}
   return (
     <>
       <Header>

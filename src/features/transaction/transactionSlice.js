@@ -6,6 +6,8 @@ export const transType = {
     EXPENSE:'expense'
 }
 
+export const accounts = [{id:'cash',name:"CASH"},{id:'online',name:"ONLINE"}]
+
 const initailState = {
   status:'idle',
   entities: [
