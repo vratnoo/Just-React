@@ -56,7 +56,7 @@ function App() {
       <div className='flex container mx-auto'>
         <Aside/>
         <main className='w-full px-5'>
-          <div className='container'>
+          <div className=''>
       <Routes>
         <Route path="/" element={ <AddTransaction  {...AddProps} />} />
         <Route path="/test" element={ <Test/>} />

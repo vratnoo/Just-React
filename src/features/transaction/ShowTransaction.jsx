@@ -26,7 +26,7 @@ const ShowTransaction = ()=>{
     const filterdTransaction = transactions.filter((item)=>{
         const date = new Date(item.date)
         console.log("item date === filter date",item.date,filterMonth)
-        return date.getMonth() === filterMonth.getMonth()
+        return date.getMonth() === filterMonth.getMonth() && date.getFullYear() === filterMonth.getFullYear()
     })
     const dispatch = useDispatch()
 
@@ -190,9 +190,7 @@ return (
         <Dialog.Content className="DialogContent max-w-3xl">
           {children}
           <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
-            <Dialog.Close asChild>
-              <button className="Button green">Save changes</button>
-            </Dialog.Close>
+            
           </div>
           <Dialog.Close asChild>
             <button className="IconButton" aria-label="Close">
